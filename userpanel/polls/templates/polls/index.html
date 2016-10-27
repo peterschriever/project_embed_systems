@@ -1,0 +1,15 @@
+{% include 'polls/_header.html' %}
+    <h2>
+        Latest poll questions by date_published
+    </h2>
+    {% if latestQuestionList %}
+        <ul>
+        {% for question in latestQuestionList %}
+            <li><a href="/polls/{{ question.id }}/">{{ question.question_text }}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No questions are available.</p>
+    {% endif %}
+
+{% include 'polls/_footer.html' %}
