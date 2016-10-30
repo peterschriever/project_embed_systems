@@ -1,0 +1,24 @@
+.rolloutSettings label {
+  padding-top: 7px;
+}
+
+.rolloutSettings label:first-of-type {
+  padding-top: 0px;
+}
+
+.value-notice {
+  display: block;
+  text-align: center;
+  font-style: italic;
+  color: #555;
+  font-size: 1.1em;
+  margin-top: 10px;
+}
+
+.rolloutSettings .value-notice {
+  margin-top: 0;
+}
+
+.submitBtnContainer {
+  margin-top: 15px;
+}

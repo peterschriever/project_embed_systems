@@ -1,0 +1,54 @@
+{% include 'partials/_header.html' %}
+
+<div class="container-fluid">
+  <div class="row">
+{% load static %}
+    <div class="col-sm-12 col-md-10 col-md-offset-2 main">
+        <h1 class="sub-header">Settings</h1>
+        <div class="col-sm-6">
+            <div class="all-shutters">
+              <form class="settings-form form" action="#CreateApplySettingsAction" method="post">
+                {% csrf_token %}
+                <label for="selControlUnit">Select a unit: </label>
+                <select class="form-control" name="selControlUnit" id="selControlUnit">
+                  <option value="0"></option>
+                  <option value="1">Control Unit ID: 1</option>
+                  <option value="2">Control Unit ID: 2</option>
+                  <option value="3">Control Unit ID: 3</option>
+                  <option value="4">Control Unit ID: 4</option>
+                </select>
+                <hr>
+                <div class="allSettingsContainer">
+                  <div class="col-sm-10 col-sm-offset-1 rolloutSettings">
+                    <span class="value-notice">Value should be in centimeters from the top of the window blind</span>
+                    <label for="maxRolloutAmount">How far down would you like the window blinds to be when rolled down?</label>
+                    <input type="number" min="0" step="1" max="160" value="160"
+                    class="form-control" id="maxRolloutAmount" name="maxRolloutAmount">
+                    <label for="maxRolloutAmount">How far down would you like the window blinds to be when rolled up?</label>
+                    <input type="number" min="0" step="1" max="160" value="5"
+                    class="form-control" id="minRolloutAmount" name="minRolloutAmount">
+                  </div>
+                  <div class="col-sm-10 col-sm-offset-1 temperatureBoundaries">
+                    <span class="value-notice">Value should be in degrees celsius (°C)</span>
+                    <label for="maxRolloutAmount">At what temperature should the window blinds roll down?</label>
+                    <input type="number" min="0" step="1" max="60" value="25"
+                    class="form-control" id="maxTemperature" name="maxTemperature">
+                    <span class="value-notice">Value should be between 0 and 1023, 0 is very dark and 1023 is very bright</span>
+                    <label for="maxRolloutAmount">At what lightintensity should the window blinds roll down?</label>
+                    <input type="number" min="0" step="1" max="1023" value="700"
+                    class="form-control" id="maxLightIntensity" name="maxLightIntensity">
+                  </div>
+                  <div class="col-sm-2 submitBtnContainer">
+                    <input type="submit" class="btn btn-primary form-control" />
+                  </div>
+                </div>
+              </form>
+
+
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+{% include 'partials/_footer.html' %}
