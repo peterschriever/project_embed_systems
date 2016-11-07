@@ -8,3 +8,4 @@ void uart_init(void);
 char uart_getByte(void);
 void uart_putByte(uint8_t c);
 void uart_putChar(char c);
+void uart_putString(char *source);

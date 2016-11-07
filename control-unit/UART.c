@@ -1,5 +1,6 @@
 #include "UART.h"
 #include <avr/io.h>
+#include <string.h>
 
 void uart_init() {
   // set the baud rate
@@ -26,4 +27,11 @@ void uart_putByte(uint8_t c) {
 void uart_putChar(char c) {
     loop_until_bit_is_set(UCSR0A, UDRE0); /* Wait until data register empty. */
     UDR0 = c;
+}
+
+void uart_putString(char *source) {
+  uint8_t i;
+  for (i = 0; i < strlen(source); i++) {
+    uart_putChar(source[i]);
+  }
 }
