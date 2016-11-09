@@ -1,0 +1,24 @@
+{
+    "default": {
+        "port": null,
+        "settings": {
+            "temp": "",
+            "distance": {
+                "min": "",
+                "max": ""
+            },
+            "light": ""
+        }
+    },
+    "55431303937351F04012": {
+        "port": "COM3",
+        "settings": {
+            "temp": "",
+            "distance": {
+                "min": "",
+                "max": ""
+            },
+            "light": ""
+        }
+    }
+}
