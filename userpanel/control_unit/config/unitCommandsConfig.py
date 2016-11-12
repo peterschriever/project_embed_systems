@@ -1,4 +1,4 @@
-unitCommandsConfig = {
+unitCommandsConfig = {#NOTE: these are only responses? where are commands?
 # 0xA0 - 0xAF status commands (16 statuscommands)
     # FAILS from 0xA8 - 0xAF (8 failcodes possible)
     0xA8: {

@@ -1,1 +1,8 @@
-{"0": {"serial": "55431303937351F04012", "port": "COM3", "description": "Arduino Uno (COM3)"}}
+{
+    "0":
+            {
+                "serial": "55431303937351F04012",
+                "port": "COM3",
+                "description": "Arduino Uno (COM3)"
+            }
+}
