@@ -1,4 +1,5 @@
 from django.db import models
 
 # Create your models here.
-from models import *
+import control_unit.submodels.CommandIdentifier
+import control_unit.submodels.UnitCommand

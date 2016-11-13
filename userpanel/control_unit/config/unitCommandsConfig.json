@@ -1,0 +1,147 @@
+[
+    {
+        "byteCode": "0x20",
+        "title": "Generic failure",
+        "response": "FAIL",
+        "tag": "_"
+    },
+    {
+        "byteCode": "0x21",
+        "title": "Timeout failure",
+        "response": "FAIL",
+        "tag": "_"
+    },
+    {
+        "byteCode": "0x22",
+        "title": "Unexpected data failure",
+        "response": "FAIL",
+        "tag": "_"
+    },
+    {
+        "byteCode": "0x30",
+        "title": "OK, no more data bytes",
+        "response": "OK",
+        "collectMore": 0,
+        "tag": "_"
+    },
+    {
+        "byteCode": "0x31",
+        "title": "OK, 1 more data byte",
+        "response": "OK",
+        "collectMore": 1,
+        "tag": "_"
+    },
+    {
+        "byteCode": "0x32",
+        "title": "OK, 2 more data bytes",
+        "response": "OK",
+        "collectMore": 2,
+        "tag": "_"
+    },
+    {
+        "byteCode": "0x33",
+        "title": "OK, 3 more data bytes",
+        "response": "OK",
+        "collectMore": 3,
+        "tag": "_"
+    },
+    {
+        "byteCode": "0x34",
+        "title": "OK, 4 more data bytes",
+        "response": "OK",
+        "collectMore": 4,
+        "tag": "_"
+    },
+    {
+        "byteCode": "0x35",
+        "title": "State is rolled down",
+        "response": "OK",
+        "collectMore": 0,
+        "tag": "_"
+    },
+    {
+        "byteCode": "0x36",
+        "title": "State is rolled up",
+        "response": "OK",
+        "collectMore": 0,
+        "tag": "_"
+    },
+    {
+        "byteCode": "0x37",
+        "title": "State is changing",
+        "response": "OK",
+        "collectMore": 0,
+        "tag": "_"
+    },
+    {
+        "byteCode": "0x50",
+        "title": "Get temperature limit",
+        "tag": "getTemperatureLimit"
+    },
+    {
+        "byteCode": "0x51",
+        "title": "Get light limit",
+        "tag": "getLightLimit"
+    },
+    {
+        "byteCode": "0x52",
+        "title": "Get current temperature",
+        "tag": "getTemperature"
+    },
+    {
+        "byteCode": "0x53",
+        "title": "Get current light-level",
+        "tag": "getLightLevel"
+    },
+    {
+        "byteCode": "0x54",
+        "title": "Get max roll down",
+        "tag": "getMaxRollDown"
+    },
+    {
+        "byteCode": "0x55",
+        "title": "Get min roll down",
+        "tag": "getMinRollDown"
+    },
+    {
+        "byteCode": "0x56",
+        "title": "Get current state",
+        "tag": "getCurrentState"
+    },
+    {
+        "byteCode": "0x60",
+        "title": "Set temperature limit",
+        "tag": "setTemperatureLimit",
+        "sendMore": 1
+    },
+    {
+        "byteCode": "0x61",
+        "title": "Set light limit",
+        "tag": "setLightLimit",
+        "sendMore": 2
+    },
+    {
+        "byteCode": "0x62",
+        "title": "Set max roll down in centimeters",
+        "tag": "setMaxRollDown",
+        "sendMore": 1
+    },
+    {
+        "byteCode": "0x63",
+        "title": "Set min roll down in centimeters",
+        "tag": "setMinRollDown",
+        "sendMore": 1
+    },
+    {
+        "byteCode": "0x64",
+        "title": "Manually set state to roll down",
+        "tag": "setStateRollDown",
+        "sendMore": 0
+    },
+    {
+        "byteCode": "0x65",
+        "title": "Manually set state to roll up",
+        "tag": "setStateRollUp",
+        "sendMore": 0
+    }
+]

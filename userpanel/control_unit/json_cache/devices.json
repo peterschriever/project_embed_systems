@@ -1,8 +1,1 @@
-{
-    "0":
-            {
-                "serial": "55431303937351F04012",
-                "port": "COM3",
-                "description": "Arduino Uno (COM3)"
-            }
-}
+{"0": {"port": "/dev/ttyACM1", "description": "USB VID:PID=2A03:0043 SER=75435353138351D07102 LOCATION=1-1", "serial": "Arduino Uno"}}
