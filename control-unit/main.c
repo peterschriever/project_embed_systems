@@ -9,16 +9,18 @@
 
 void testUART();
 void checkTemperature();
+void checkLight();
 
 int main() {
   init_adc();
   uart_init();
   SCH_Init_T1();
   SCH_Start();
-  SCH_Add_Task(testUART, 0, 5000); // debugging: perform a test every 5s
+  // SCH_Add_Task(testUART, 0, 5000); // debugging: perform a test every 5s
 
-  // temperature sensor check, 1s
+  // sensor checks, 1s
   SCH_Add_Task(checkTemperature, 0, 100);
+  SCH_Add_Task(checkLight, 0, 50);
 
   while (1) {
     SCH_Dispatch_Tasks();
@@ -31,9 +33,11 @@ void testUART() {
 }
 
 void checkTemperature() {
-  uint16_t val = get_adc_value();
-  uint8_t result = low(val);
-  // @TODO: see ADC.c todo. Only returns 0x03 for some reason..
-  uart_putString("get_adc_value (PC0=input): ");
-  uart_putByte(result);
+  uint16_t temp = low(get_adc_value(PC0) >> 2);
+  uart_putByte(temp);
+}
+
+void checkLight() {
+  uint16_t temp = get_adc_value(PC1);
+  uart_putDouble(temp);
 }
