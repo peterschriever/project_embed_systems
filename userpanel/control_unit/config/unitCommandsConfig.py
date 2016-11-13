@@ -2,7 +2,7 @@ unitCommandsConfig = {
 # 0x20 - 0x40 status commands (32 possible)
     # FAILs from 0x20 - 0x30 (16 possible)
     0x20: {
-        "title": "Get temperature limit",
+        "title": "Generic failure",
         "response": "FAIL",
     },
     0x21: {
