@@ -1,115 +1,162 @@
 {% include 'partials/_header.html' %}
 
-<div class="container-fluid">
-  <div class="row">
-{% load static %}
-    <div class="col-sm-12 col-md-10 col-md-offset-2 main">
-        <h1 class="sub-header">Status overview</h1>
-        <div class="col-sm-12">
-            <div class="all-shutters">
-                <strong>Connected automatic window blind control units: 4</strong><br/>
+
+<div class id="container-fluid">
+    <div class="row">
+        {% load static %}
+
+        <div class="col-sm-12 col-md-10 col-md-offset-2 main">
+            <h1 class="sub-header">Status overview</h1>
+            <div class="col-sm-12">
+                <div class="all-shutters">
+                    <strong>Connected automatic window blind control units: 4</strong><br/>
+
+                    <br />
+                    <hr />
+                    <div class="rolldown">
+                        <div class="panel-status-details col-sm-12">
+                            <a href="#" onclick="$('#rollout1').toggle();">
+                                <h3>Control unit ID: 1</h3></a>
+                            <div id="rollout1">
+                                <div>
+                                    <a href="#toggleWindowBlind" class="btn btn-default">
+                                        Roll down <i class="fa fa-angle-down"></i>
+                                    </a>
+                                </div>
+                                <strong> Status: </strong> <i class="fa fa-square-o"></i> Rolled up <br/>
+                                <strong> Current temperature: </strong> 20°C <br/>
+                                <strong> Current light intensity: </strong> 500nm <br/>
+                                <div class="panel-status-charts">
+
+                                    <div class="col-sm-6">
+                                        <div class="container">
+                                            <div class="row m-b-1">
+                                                <div class="col-xs-6">
+                                                    <div class="card shadow">
+                                                        <h4 class="card-header">Temperature</h4>
+                                                        <div class="card-block">
+                                                            <div id="temp-chart-1"></div>
+                                                        </div>
+                                                    </div>
+                                                    <button onclick="addDataPoint(0,0);">Add Data Point</button>  
+                                                    <button onclick="updateDataPoint(0,0);">Update Data Point</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="container">
+                                            <div class="row m-b-1">
+                                                <div class="col-xs-6">
+                                                    <div class="card shadow">
+                                                        <h4 class="card-header">Light intensity</h4>
+                                                        <div class="card-block">
+                                                            <div id="light-chart-1"></div>
+                                                        </div>
+                                                    </div>
+                                                    <button onclick="addDataPoint(0,1);">Add Data Point</button>  
+                                                    <button onclick="updateDataPoint(0,1);">Update Data Point</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br/>
+                    <hr />
+                    <div class="rolldown">
+                        <div class="panel-status-details col-sm-12">
+                            <a href="#" onclick="$('#rollout2').toggle();">
+                                <h3>Control unit ID: 2</h3></a>
+                            <div id="rollout2">
+                                <div>
+                                    <a href="#toggleWindowBlind" class="btn btn-default" disabled="disabled">
+                                        Roll down <i class="fa fa-angle-down"></i>
+                                    </a>
+                                </div>
+                                <strong> Status: </strong> <i class="fa fa-angle-double-up"></i> rolling up <br/>
+                                <strong> Current temperature: </strong> 26Ã‚Â°C <br/>
+                                <strong> Current lightintensity: </strong> 500nm <br/>
+                                <div class="panel-status-charts">
+                                    <div class="col-sm-6">
+                                        <strong class="sub-header">Temperature data chart</strong>
+                                        <img src="{% static "dummy/temperatureGraph.jpg" %}" alt="" />
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <strong class="sub-header">Lightintensity data chart</strong>
+                                        <img src="{% static "dummy/lightintensityGraph.jpg" %}" alt="" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br/>
+                    <hr />
+                    <div class="rolldown">
+                        <div class="panel-status-details col-sm-12">
+                            <a href="#" onclick="$('#rollout3').toggle();">
+                                <h3>Control unit ID: 3</h3></a>
+                            <div id="rollout3">
+                                <div>
+                                    <a href="#toggleWindowBlind" class="btn btn-default">
+                                        Roll up <i class="fa fa-angle-up"></i>
+                                    </a>
+                                </div>
+                                <strong> Status: </strong> <i class="fa fa-square"></i> Rolled down <br/>
+                                <strong> Current temperature: </strong> 19Ã‚Â°C <br/>
+                                <strong> Current lightintensity: </strong> 600nm <br/>
+                                <div class="panel-status-charts">
+                                    <div class="col-sm-6">
+                                        <strong class="sub-header">Temperature data chart</strong>
+                                        <img src="{% static "dummy/temperatureGraph.jpg" %}" alt="" />
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <strong class="sub-header">Lightintensity data chart</strong>
+                                        <img src="{% static "dummy/lightintensityGraph.jpg" %}" alt="" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <hr />
+                    <div class="rolldown">
+                        <div class="panel-status-details col-sm-12">
+                            <a href="#" onclick="$('#rollout4').toggle();">
+                                <h3>Control unit ID: 4</h3></a>
+                            <div id "rollout4">
+                                 <div>
+                                    <a href="#toggleWindowBlind" class="btn btn-default" >
+                                        Roll up <i class="fa fa-angle-up"></i>
+                                    </a>
+                                </div>
+                                <strong> Status: </strong> <i class="fa fa-angle-double-down"></i> Rolling down <br/>
+                                <strong> Current temperature: </strong> 21Ã‚Â°C <br/>
+                                <strong> Current lightintensity: </strong> 400nm <br/>
+                                <div class="panel-status-charts">
+                                    <div class="col-sm-6">
+                                        <strong class="sub-header">Temperature data chart</strong>
+                                        <img src="{% static "dummy/temperatureGraph.jpg" %}" alt="" />
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <strong class="sub-header">Lightintensity data chart</strong>
+                                        <img src="{% static "dummy/lightintensityGraph.jpg" %}" alt="" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <hr />
+                </div>
             </div>
-            <br/>
-            <hr />
-            <div class="blind-status-details col-sm-12">
-                <h3>Control unit ID: 1</h3>
-                <div>
-                    <a href="#toggleWindowBlind" class="btn btn-default">
-                        Roll down <i class="fa fa-angle-down"></i>
-                    </a>
-                </div>
-                <strong> Status: </strong> <i class="fa fa-square-o"></i> Rolled up <br/>
-                <strong> Current temperature: </strong> 20�C <br/>
-                <strong> Current lightintensity: </strong> 500nm <br/>
-                <div class="panel-status-charts">
-                    <div class="col-sm-6">
-                        <strong class="sub-header">Temperature data chart</strong>
-                        <img src="{% static "dummy/temperatureGraph.jpg" %}" alt="" />
-                    </div>
-                    <div class="col-sm-6">
-                        <strong class="sub-header">Lightintensity data chart</strong>
-                        <img src="{% static "dummy/lightintensityGraph.jpg" %}" alt="" />
-                    </div>
-                </div>
-            </div>
-            <br/>
-            <hr />
-            <div class="panel-status-details col-sm-12">
-                <h3>Control unit ID: 2</h3>
-                <div>
-                    <a href="#toggleWindowBlind" class="btn btn-default" disabled="disabled">
-                        Roll down <i class="fa fa-angle-down"></i>
-                    </a>
-                </div>
-                <strong> Status: </strong> <i class="fa fa-angle-double-up"></i> rolling up <br/>
-                <strong> Current temperature: </strong> 26°C <br/>
-                <strong> Current lightintensity: </strong> 500nm <br/>
-                <div class="panel-status-charts">
-                    <div class="col-sm-6">
-                        <strong class="sub-header">Temperature data chart</strong>
-                        <img src="{% static "dummy/temperatureGraph.jpg" %}" alt="" />
-                    </div>
-                    <div class="col-sm-6">
-                        <strong class="sub-header">Lightintensity data chart</strong>
-                        <img src="{% static "dummy/lightintensityGraph.jpg" %}" alt="" />
-                    </div>
-                </div>
-            </div>
-            <br/>
-            <hr />
-            <div class="panel-status-details col-sm-12">
-                <h3>Control unit ID: 3</h3>
-                <div>
-                    <a href="#toggleWindowBlind" class="btn btn-default">
-                        Roll up <i class="fa fa-angle-up"></i>
-                    </a>
-                </div>
-                <strong> Status: </strong> <i class="fa fa-square"></i> Rolled down <br/>
-                <strong> Current temperature: </strong> 19°C <br/>
-                <strong> Current lightintensity: </strong> 600nm <br/>
-                <div class="panel-status-charts">
-                    <div class="col-sm-6">
-                        <strong class="sub-header">Temperature data chart</strong>
-                        <img src="{% static "dummy/temperatureGraph.jpg" %}" alt="" />
-                    </div>
-                    <div class="col-sm-6">
-                        <strong class="sub-header">Lightintensity data chart</strong>
-                        <img src="{% static "dummy/lightintensityGraph.jpg" %}" alt="" />
-                    </div>
-                </div>
-            </div>
-            <br/>
-            <hr />
-            <div class="panel-status-details col-sm-12">
-                <h3>Control unit ID: 4</h3>
-                <div>
-                    <a href="#toggleWindowBlind" class="btn btn-default" disabled="disabled">
-                        Roll up <i class="fa fa-angle-up"></i>
-                    </a>
-                </div>
-                <strong> Status: </strong> <i class="fa fa-angle-double-down"></i> Rolling down <br/>
-                <strong> Current temperature: </strong> 21°C <br/>
-                <strong> Current lightintensity: </strong> 400nm <br/>
-                <div class="panel-status-charts">
-                    <div class="col-sm-6">
-                        <strong class="sub-header">Temperature data chart</strong>
-                        <img src="{% static "dummy/temperatureGraph.jpg" %}" alt="" />
-                    </div>
-                    <div class="col-sm-6">
-                        <strong class="sub-header">Lightintensity data chart</strong>
-                        <img src="{% static "dummy/lightintensityGraph.jpg" %}" alt="" />
-                    </div>
-                </div>
-            </div>
-            <br/>
-            <hr />
         </div>
-
-
-
-
     </div>
-  </div>
 </div>
+
 
 {% include 'partials/_footer.html' %}
