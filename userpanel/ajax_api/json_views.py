@@ -38,7 +38,7 @@ def templateFunction(request):
 
 @csrf_exempt # for debugging
 def testCommandCommunication(request):
-    getTempCmd = CommandIdentifier.getCommand('getTemperature')
+    getTempCmd = CommandIdentifier.getCommand('getLightLevel')
     toUnits = UnitScanner.getAllUnits()
     resolveCmd = UnitCommunication.sendCommand(getTempCmd, toUnits)
     return HttpResponse([resolveCmd])

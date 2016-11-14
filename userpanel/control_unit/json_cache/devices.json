@@ -1,1 +1,1 @@
-{"0": {"port": "/dev/ttyACM1", "description": "USB VID:PID=2A03:0043 SER=75435353138351D07102 LOCATION=1-1", "serial": "Arduino Uno"}}
+{"0": {"description": "USB VID:PID=2A03:0043 SER=75435353138351D07102 LOCATION=1-1", "port": "/dev/ttyACM1", "serial": "Arduino Uno"}}

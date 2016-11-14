@@ -19,7 +19,6 @@ class ControlUnit:
         # TODO: rewrite C code base so that it never sends by default
         # and only sends responses to Python code commands
         # this way the Python code can simply wait for the board to reply
-        time.sleep(0.1)
-        respByte = ord(ser.read(1))
+        respByte = hex(ord(ser.read(1)))
         print("respByte", respByte)
         return respByte
