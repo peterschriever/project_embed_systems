@@ -117,7 +117,7 @@ def sendCommandToDevice(port, command, extra = None):
         if(cmd == None):
             return None #command not found
         
-        msg = [cmd['byteCode']]
+        msg = [int(cmd['byteCode'],16)]
         i = 0
         while(cmd.get('sendMore', 0) > 0):
             msg.append(extra.get(i, "0x00"))
@@ -218,3 +218,11 @@ def isNewDevice(device):#device from scanPorts()
         return False
     else:
         return True
+    
+#sensor data to Celcius
+def tempSensorToC(tempcode):
+    return ((tempcode * (5000 / 1024))-500) / 10
+
+#reverse of tempSensorToC
+def tempCToSensor(temp):
+    return ((temp * 10) + 500) / (5000 / 1024)
