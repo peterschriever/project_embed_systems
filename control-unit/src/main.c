@@ -136,7 +136,7 @@ ISR(USART_RX_vect)
   char receivedByte;
   receivedByte = uart_getByte(); // Fetch the received byte value into the variable "ByteReceived"
   // @TODO: remove the echo-back
-  uart_putByte(receivedByte); // Echo back the received byte back to the computer
+  // uart_putByte(receivedByte); // Echo back the received byte back to the computer
   uint8_t collectMore = 0;
   switch (receivedByte) {
     case 0x50:
