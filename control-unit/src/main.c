@@ -1,7 +1,7 @@
 #include "AVR_TTC_scheduler.h"
 #include "UART.h"
 #include "tempSensor.h"
-#include "lightSensor.h"
+// #include "lightSensor.h"
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
@@ -23,7 +23,7 @@ int main() {
 
   // sensor checks, 0.5s
   SCH_Add_Task(checkTemperature, 0, 10);
-  // SCH_Add_Task(checkLight, 0, 20);
+  SCH_Add_Task(checkLight, 0, 20);
 
   // Check if we received anything from the Python code base
   // SCH_Add_Task(pollForCommand, 0, 10);
@@ -53,18 +53,18 @@ void testUART() {
 void checkTemperature() {
   initTempADC();
   _delay_ms(5);
-  uart_putString("T");
-  uart_putByte(sampleTempADC());
+  uart_putChar('T');
+  uart_putByte(sampleTempADC(1));
   resetADC();
-  // TODO: do some checks against the light reading
+  // TODO: do some checks against the temp reading
 }
 
 void checkLight() {
   initTempADC();
   // initLightADC();
   _delay_ms(5);
-  uart_putString("L");
-  uart_putByte(0x00);
+  uart_putChar('L');
+  uart_putDouble(sampleTempADC(4));
   resetADC();
   // TODO: do some checks against the light reading
 }

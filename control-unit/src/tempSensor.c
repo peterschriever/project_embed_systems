@@ -27,12 +27,12 @@ void initTempADC() {
     ADCSRA |= (1<<ADSC);                            // start sampling
 }
 
-uint16_t sampleTempADC() {
+uint16_t sampleTempADC(channel) {
 // Returns 8 bit reading (left justified)
     uint16_t adcVal = 0;
     ADMUX &= ~((1<<MUX3)|(1<<MUX2)|(1<<MUX1)|(1<<MUX0)); // Clear ADC Mux Bits
     // read from channel 1 [PC1, A1]
-        ADMUX |= (1<<MUX0);                             // setup ADC Channel 1
+        ADMUX |= channel;                             // setup ADC Channel 1
         ADCSRA |= (1 << ADSC);                          // Start a new conversion,
         while(ADCSRA & _BV(ADSC));                      // Wait until conversion is complete and ADSC is cleared
         adcVal = ADC;                                   // 8 bit reading, ADLAR set

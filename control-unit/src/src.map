@@ -29,16 +29,16 @@ Discarded input sections
  .bss           0x0000000000000000        0x0 main.o
  .text.pollForCommand
                 0x0000000000000000       0x12 main.o
+ .rodata.str1.1
+                0x0000000000000000        0x5 main.o
  .text.testUART
                 0x0000000000000000        0x8 main.o
- .text.checkLight
-                0x0000000000000000       0x22 main.o
  .text          0x0000000000000000        0x0 UART.o
  .bss           0x0000000000000000        0x0 UART.o
  .text.uart_getByte
                 0x0000000000000000        0xe UART.o
- .text.uart_putDouble
-                0x0000000000000000       0x12 UART.o
+ .text.uart_putString
+                0x0000000000000000       0x3a UART.o
  .text          0x0000000000000000        0x0 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
  .bss           0x0000000000000000        0x0 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
  .text.libgcc.mul
@@ -202,7 +202,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x0000000000000000      0x2fc
+.text           0x0000000000000000      0x30c
  *(.vectors)
  .vectors       0x0000000000000000       0x68 /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/crtm328p.o
                 0x0000000000000000                __vectors
@@ -311,31 +311,34 @@ END GROUP
                 0x00000000000001cc       0x64 AVR_TTC_scheduler.o
                 0x00000000000001cc                __vector_11
  .text.startup.main
-                0x0000000000000230       0x22 main.o
+                0x0000000000000230       0x32 main.o
                 0x0000000000000230                main
  .text.resetADC
-                0x0000000000000252        0xa main.o
-                0x0000000000000252                resetADC
+                0x0000000000000262        0xa main.o
+                0x0000000000000262                resetADC
  .text.checkTemperature
-                0x000000000000025c       0x24 main.o
-                0x000000000000025c                checkTemperature
+                0x000000000000026c       0x26 main.o
+                0x000000000000026c                checkTemperature
+ .text.checkLight
+                0x0000000000000292       0x26 main.o
+                0x0000000000000292                checkLight
  .text.uart_init
-                0x0000000000000280       0x22 UART.o
-                0x0000000000000280                uart_init
+                0x00000000000002b8       0x22 UART.o
+                0x00000000000002b8                uart_init
  .text.uart_putByte
-                0x00000000000002a2        0xe UART.o
-                0x00000000000002a2                uart_putByte
+                0x00000000000002da        0xe UART.o
+                0x00000000000002da                uart_putByte
  .text.uart_putChar
-                0x00000000000002b0        0xe UART.o
-                0x00000000000002b0                uart_putChar
- .text.uart_putString
-                0x00000000000002be       0x3a UART.o
-                0x00000000000002be                uart_putString
-                0x00000000000002f8                . = ALIGN (0x2)
+                0x00000000000002e8        0xe UART.o
+                0x00000000000002e8                uart_putChar
+ .text.uart_putDouble
+                0x00000000000002f6       0x12 UART.o
+                0x00000000000002f6                uart_putDouble
+                0x0000000000000308                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00000000000002f8        0x0 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
-                0x00000000000002f8                exit
-                0x00000000000002f8                _exit
+ .fini9         0x0000000000000308        0x0 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
+                0x0000000000000308                exit
+                0x0000000000000308                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -354,11 +357,11 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00000000000002f8        0x4 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
+ .fini0         0x0000000000000308        0x4 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
  *(.fini0)
-                0x00000000000002fc                _etext = .
+                0x000000000000030c                _etext = .
 
-.data           0x0000000000800100        0xa load address 0x00000000000002fc
+.data           0x0000000000800100        0x0 load address 0x000000000000030c
                 0x0000000000800100                PROVIDE (__data_start, .)
  *(.data)
  .data          0x0000000000800100        0x0 /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/crtm328p.o
@@ -373,31 +376,28 @@ END GROUP
  *(.data*)
  *(.rodata)
  *(.rodata*)
- .rodata.str1.1
-                0x0000000000800100        0x9 main.o
  *(.gnu.linkonce.d*)
-                0x000000000080010a                . = ALIGN (0x2)
- *fill*         0x0000000000800109        0x1 
-                0x000000000080010a                _edata = .
-                0x000000000080010a                PROVIDE (__data_end, .)
+                0x0000000000800100                . = ALIGN (0x2)
+                0x0000000000800100                _edata = .
+                0x0000000000800100                PROVIDE (__data_end, .)
 
-.bss            0x000000000080010a       0x23
-                0x000000000080010a                PROVIDE (__bss_start, .)
+.bss            0x0000000000800100       0x23
+                0x0000000000800100                PROVIDE (__bss_start, .)
  *(.bss)
  *(.bss*)
  *(COMMON)
- COMMON         0x000000000080010a       0x23 AVR_TTC_scheduler.o
-                0x000000000080010a                SCH_tasks_G
-                0x000000000080012d                PROVIDE (__bss_end, .)
-                0x00000000000002fc                __data_load_start = LOADADDR (.data)
-                0x0000000000000306                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x0000000000800100       0x23 AVR_TTC_scheduler.o
+                0x0000000000800100                SCH_tasks_G
+                0x0000000000800123                PROVIDE (__bss_end, .)
+                0x000000000000030c                __data_load_start = LOADADDR (.data)
+                0x000000000000030c                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x000000000080012d        0x0
-                0x000000000080012d                PROVIDE (__noinit_start, .)
+.noinit         0x0000000000800123        0x0
+                0x0000000000800123                PROVIDE (__noinit_start, .)
  *(.noinit*)
-                0x000000000080012d                PROVIDE (__noinit_end, .)
-                0x000000000080012d                _end = .
-                0x000000000080012d                PROVIDE (__heap_start, .)
+                0x0000000000800123                PROVIDE (__noinit_end, .)
+                0x0000000000800123                _end = .
+                0x0000000000800123                PROVIDE (__heap_start, .)
 
 .eeprom         0x0000000000810000        0x0
  *(.eeprom*)
@@ -418,7 +418,7 @@ END GROUP
 .user_signatures
  *(.user_signatures*)
 
-.stab           0x0000000000000000     0x1860
+.stab           0x0000000000000000     0x18b4
  *(.stab)
  .stab          0x0000000000000000      0x474 lightSensor.o
                                         0x540 (size before relaxing)
@@ -426,9 +426,9 @@ END GROUP
                                         0x5dc (size before relaxing)
  .stab          0x0000000000000894      0x6a8 AVR_TTC_scheduler.o
                                         0x864 (size before relaxing)
- .stab          0x0000000000000f3c      0x444 main.o
-                                        0x738 (size before relaxing)
- .stab          0x0000000000001380      0x4e0 UART.o
+ .stab          0x0000000000000f3c      0x4d4 main.o
+                                        0x744 (size before relaxing)
+ .stab          0x0000000000001410      0x4a4 UART.o
                                         0x75c (size before relaxing)
 
 .stabstr        0x0000000000000000     0x10ca
