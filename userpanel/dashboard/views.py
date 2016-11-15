@@ -4,7 +4,7 @@ from django.shortcuts import render
 # Create your views here.
 @ensure_csrf_cookie
 def index(request):
-    return render(request, 'index.html', {"asd": True})
+    return render(request, 'index.html', {"jsFile": "bla.js"})
 
 @ensure_csrf_cookie
 def settings(request):

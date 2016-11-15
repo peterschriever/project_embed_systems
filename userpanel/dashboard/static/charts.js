@@ -271,6 +271,7 @@ function getGraphUpdates() {
         } else {
             var devID;
             $.each(data.data, function (key, val) {
+                console.log(val);
                 devID = $.inArray(key, devices);
                 addDataPoint(devID, 0, val[0]);
                 addDataPoint(devID, 1, val[1]);

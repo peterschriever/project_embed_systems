@@ -7,8 +7,9 @@ import time
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from control_unit.functions import *
 
-cacheDir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "\\control_unit\\json_cache\\"
-configDir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "\\control_unit\\config\\"
+_DS = os.sep
+cacheDir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + _DS+"control_unit"+_DS+"json_cache"+_DS
+configDir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + _DS+"control_unit"+_DS+"config"+_DS
 
 
 #ajax/json response generator
@@ -136,8 +137,9 @@ def getGraphUpdate(request):
                     result['temp'] = tempSensorToC(result['temp'])
                     returndata[dev] = [result['temp'], result['light']]
                     newSensordata[dev] = {'timestamp':currentTime, 'temp':result['temp'], 'light':result['light']}
+                    print("newSensordata[dev]", newSensordata[dev])
             else:
-                returndata[dev] = [data.get('temp'), data.get('light')]
+                returndata[dev] = [sensordata.get(dev, 'temp'), sensordata.get(dev, 'light')]
     writeToCache(cacheDir + 'sensordata.json', newSensordata)
 
     return buildResponse({'data':returndata})

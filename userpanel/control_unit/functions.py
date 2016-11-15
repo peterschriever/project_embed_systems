@@ -4,9 +4,9 @@ import serial
 import serial.tools.list_ports
 import time
 
-
-cacheDir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "\\control_unit\\json_cache\\"
-configDir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "\\control_unit\\config\\"
+_DS = os.sep
+cacheDir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + _DS+"control_unit"+_DS+"json_cache"+_DS
+configDir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + _DS+"control_unit"+_DS+"config"+_DS
 
 def scanPorts(info = ""):
     if(info == 'ports'):
@@ -50,7 +50,9 @@ def readByte(ser):
     return ord(ser.read(1));
 
 def readDoubleByte(ser):
-    return (ord(ser.read(1)) << 8) + ord(ser.read(1))
+    firstByte = (ord(ser.read(1)) << 8)
+    secondByte = ord(ser.read(1))
+    return firstByte + secondByte
 
 #reads @length@ from @device@; where @device@ is either port or serial
 #@lenght@ will generally be either 8 or 16
@@ -138,12 +140,14 @@ def sendCommandToDevice(port, command, extra = None):
         return data['return']
 
     ser = serial.Serial(port, 19200)
-    print(data['msg'])
+    print("data['msg']", data['msg'])
 
     ser.write(data['msg'])
 
     responseCode = ser.read(1)
-    response = getCommandDetails(responseCode, 'bytecode')
+    print("responseCode", hex(ord(responseCode)))
+    response = getCommandDetails(hex(ord(responseCode)), 'byteCode')
+    print("response", response)
     if(response['response'] == "FAIL"):
         ser.close()
         return None
@@ -158,16 +162,17 @@ def sendCommandToDevice(port, command, extra = None):
 
 
 def getCommandDetails(search, searchOn = None):
-    configDict = readFromCache(configDir + 'unitcommandsConfig.json', 'dict')
+    configDict = readFromCache(configDir + 'unitCommandsConfig.json', 'dict')
 
     if(searchOn != None):
         key = searchOn
     else:
-        if(len(search) == 4 and search[:2] == "0x"):#bytecode
-            key = 'bytecode'
+        if(len(search) == 4 and search[:2] == "0x"):#byteCode
+            key = 'byteCode'
         else:
             key = 'tag'
     for item in configDict:
+        print("item in configDict", item)
         if(item[key] == search):
             return item
     return None #nothing found
@@ -221,8 +226,8 @@ def isNewDevice(device):#device from scanPorts()
 
 #sensor data to Celcius
 def tempSensorToC(tempcode):
-    return ((tempcode * (5000 / 1024))-500) / 10
+    return ((tempcode * (5000.0 / 1024))-500) / 10  # added .0 for floating point numbers (python thing..)
 
 #reverse of tempSensorToC
 def tempCToSensor(temp):
-    return ((temp * 10) + 500) / (5000 / 1024)
+    return round(((temp * 10) + 500) / (5000.0 / 1024)) # added .0 for floating point numbers (python thing..)

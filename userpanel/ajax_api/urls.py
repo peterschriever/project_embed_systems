@@ -5,7 +5,6 @@ from django.http import HttpRequest
 urlpatterns = [
     # /api/v1/get-temperature-data
     url(r'^test$', json_views.templateFunction),
-    url(r'^test-command-communication$', json_views.testCommandCommunication),
     url(r'^get-connected-devices$', json_views.getConnectedDevices),
     url(r'^get-device-settings$', json_views.getDeviceSettings),
     url(r'^set-device-settings$', json_views.setDeviceSettings),
