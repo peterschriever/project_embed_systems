@@ -5,13 +5,13 @@
 // max: 255
 // ex: 140 == 18.36 degrees celsius
 // ex: 160 == 28.13 degrees celsius
-uint16_t _temperatureLimit = 140;
+uint16_t _temperatureLimit = 169;
 
 // Factory light limit
 // ex: 500
 // min: 0
 // max: 1023
-uint16_t _lightLimit = 500;
+uint16_t _lightLimit = 1000;
 
 // Factory max roll down limit in cms
 // ex: 160
