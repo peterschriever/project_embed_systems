@@ -52,7 +52,7 @@ def getDeviceSettings(request):
     else:
         for deviceSerial in dict:
             if(deviceSerial == deviceID):
-                return buildResponse(dict[deviceSerial]['settings'])
+                return buildResponse(dict[deviceSerial])
         #not found
         return buildErrorResponse({'error_msg':'Device "' + deviceID + '" not found.', \
                                   'extra':dict})
@@ -137,7 +137,7 @@ def getGraphUpdate(request):
                     returndata[dev] = [result['temp'], result['light']]
                     newSensordata[dev] = {'timestamp':currentTime, 'temp':result['temp'], 'light':result['light']}
             else:
-                returndata[dev] = [data.get('temp'), data.get('light')]
+                returndata[dev] = [sensordata[dev].get('temp'), data.get('light')]
     writeToCache(cacheDir + 'sensordata.json', newSensordata)
     
     return buildResponse({'data':returndata})

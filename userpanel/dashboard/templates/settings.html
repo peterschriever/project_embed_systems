@@ -10,23 +10,17 @@
               <form class="settings-form form" action="#CreateApplySettingsAction" method="post">
                 {% csrf_token %}
                 <label for="selControlUnit">Select a unit: </label>
-                <select class="form-control" name="selControlUnit" id="selControlUnit">
-                  <option value="0"></option>
-                  <option value="1">Control Unit ID: 1</option>
-                  <option value="2">Control Unit ID: 2</option>
-                  <option value="3">Control Unit ID: 3</option>
-                  <option value="4">Control Unit ID: 4</option>
+                <select class="form-control" name="selControlUnit" id="selControlUnit" onchange="loadSettings(this);">
+                  <option value="-1">Select a Control Unit</option>
                 </select>
                 <hr>
                 <div class="allSettingsContainer">
                   <div class="col-sm-10 col-sm-offset-1 rolloutSettings">
                     <span class="value-notice">Value should be in centimeters from the top of the window blind (cm)</span>
                     <label for="maxRolloutAmount">How far down would you like the window blinds to be when rolled down?</label>
-                    <input type="number" min="0" step="1" max="160" value="160"
-                    class="form-control" id="maxRolloutAmount" name="maxRolloutAmount">
+                    <input type="number" min="0" step="1" max="160" value="160" class="form-control" id="maxRolloutAmount" name="maxRolloutAmount">
                     <label for="maxRolloutAmount">How far down would you like the window blinds to be when rolled up?</label>
-                    <input type="number" min="0" step="1" max="160" value="5"
-                    class="form-control" id="minRolloutAmount" name="minRolloutAmount">
+                    <input type="number" min="0" step="1" max="160" value="5"class="form-control" id="minRolloutAmount" name="minRolloutAmount">
                   </div>
                   <div class="col-sm-10 col-sm-offset-1 temperatureBoundaries">
                     <span class="value-notice">Value should be in degrees celsius (°C)</span>
@@ -39,7 +33,7 @@
                     class="form-control" id="maxLightIntensity" name="maxLightIntensity">
                   </div>
                   <div class="col-sm-2 submitBtnContainer">
-                    <input type="submit" class="btn btn-primary form-control" />
+                    <input type="submit" class="btn btn-primary form-control" value="Submit" />
                   </div>
                 </div>
               </form>
