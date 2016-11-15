@@ -11,7 +11,8 @@ void init_adc() {
 
 // @TODO: temp reading is being a bitch
 uint16_t get_adc_value(uint8_t analogPin) {
-  ADMUX = (1<<REFS0)|(1<<analogPin);
+  // ADMUX = (1 << REFS0)|(1 << analogPin); <- instabiel vanwege resets in bovenste pins waarschijlijk
+  ADMUX = (0xf0 & ADMUX)|(1 << analogPin);
   ADCSRA |= (1<<ADSC); // start conversion
   loop_until_bit_is_clear(ADCSRA, ADSC);
   return ADCW; // ADCW / ADCL / ADCH

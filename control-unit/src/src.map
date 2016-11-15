@@ -15,26 +15,30 @@ SCH_tasks_G         0x23              AVR_TTC_scheduler.o
 Discarded input sections
 
  .bss           0x0000000000000000        0x0 /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/crtm328p.o
+ .text          0x0000000000000000        0x0 lightSensor.o
+ .bss           0x0000000000000000        0x0 lightSensor.o
+ .text.initLightADC
+                0x0000000000000000       0x18 lightSensor.o
+ .text.sampleLightADC
+                0x0000000000000000       0x30 lightSensor.o
+ .text          0x0000000000000000        0x0 tempSensor.o
+ .bss           0x0000000000000000        0x0 tempSensor.o
  .text          0x0000000000000000        0x0 AVR_TTC_scheduler.o
  .bss           0x0000000000000000        0x0 AVR_TTC_scheduler.o
  .text          0x0000000000000000        0x0 main.o
  .bss           0x0000000000000000        0x0 main.o
- .rodata.str1.1
-                0x0000000000000000        0xd main.o
+ .text.pollForCommand
+                0x0000000000000000       0x12 main.o
  .text.testUART
                 0x0000000000000000        0x8 main.o
+ .text.checkLight
+                0x0000000000000000       0x22 main.o
  .text          0x0000000000000000        0x0 UART.o
  .bss           0x0000000000000000        0x0 UART.o
- .text.uart_putChar
+ .text.uart_getByte
                 0x0000000000000000        0xe UART.o
- .text.uart_putString
-                0x0000000000000000       0x3a UART.o
  .text.uart_putDouble
                 0x0000000000000000       0x12 UART.o
- .text          0x0000000000000000        0x0 ADC.o
- .bss           0x0000000000000000        0x0 ADC.o
- .text.get_adc_value
-                0x0000000000000000       0x2e ADC.o
  .text          0x0000000000000000        0x0 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
  .bss           0x0000000000000000        0x0 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
  .text.libgcc.mul
@@ -97,10 +101,11 @@ Linker script and memory map
 
 Address of section .data set to 0x800100
 LOAD /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/crtm328p.o
+LOAD lightSensor.o
+LOAD tempSensor.o
 LOAD AVR_TTC_scheduler.o
 LOAD main.o
 LOAD UART.o
-LOAD ADC.o
 START GROUP
 LOAD /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a
 LOAD /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/libm.a
@@ -197,7 +202,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x0000000000000000      0x284
+.text           0x0000000000000000      0x2fc
  *(.vectors)
  .vectors       0x0000000000000000       0x68 /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/crtm328p.o
                 0x0000000000000000                __vectors
@@ -281,53 +286,56 @@ END GROUP
                 0x00000000000000a2                __vector_20
                 0x00000000000000a6                . = ALIGN (0x2)
  *(.text.*)
+ .text.initTempADC
+                0x00000000000000a6       0x22 tempSensor.o
+                0x00000000000000a6                initTempADC
+ .text.sampleTempADC
+                0x00000000000000c8       0x30 tempSensor.o
+                0x00000000000000c8                sampleTempADC
  .text.SCH_Add_Task
-                0x00000000000000a6       0x30 AVR_TTC_scheduler.o
-                0x00000000000000a6                SCH_Add_Task
+                0x00000000000000f8       0x30 AVR_TTC_scheduler.o
+                0x00000000000000f8                SCH_Add_Task
  .text.SCH_Delete_Task
-                0x00000000000000d6       0x1e AVR_TTC_scheduler.o
-                0x00000000000000d6                SCH_Delete_Task
+                0x0000000000000128       0x1e AVR_TTC_scheduler.o
+                0x0000000000000128                SCH_Delete_Task
  .text.SCH_Dispatch_Tasks
-                0x00000000000000f4       0x56 AVR_TTC_scheduler.o
-                0x00000000000000f4                SCH_Dispatch_Tasks
+                0x0000000000000146       0x56 AVR_TTC_scheduler.o
+                0x0000000000000146                SCH_Dispatch_Tasks
  .text.SCH_Init_T1
-                0x000000000000014a       0x2c AVR_TTC_scheduler.o
-                0x000000000000014a                SCH_Init_T1
+                0x000000000000019c       0x2c AVR_TTC_scheduler.o
+                0x000000000000019c                SCH_Init_T1
  .text.SCH_Start
-                0x0000000000000176        0x4 AVR_TTC_scheduler.o
-                0x0000000000000176                SCH_Start
+                0x00000000000001c8        0x4 AVR_TTC_scheduler.o
+                0x00000000000001c8                SCH_Start
  .text.__vector_11
-                0x000000000000017a       0x64 AVR_TTC_scheduler.o
-                0x000000000000017a                __vector_11
- .text.checkTemperature
-                0x00000000000001de        0x2 main.o
-                0x00000000000001de                checkTemperature
- .text.checkLight
-                0x00000000000001e0        0x2 main.o
-                0x00000000000001e0                checkLight
- .text.pollForCommand
-                0x00000000000001e2       0x12 main.o
-                0x00000000000001e2                pollForCommand
+                0x00000000000001cc       0x64 AVR_TTC_scheduler.o
+                0x00000000000001cc                __vector_11
  .text.startup.main
-                0x00000000000001f4       0x46 main.o
-                0x00000000000001f4                main
+                0x0000000000000230       0x22 main.o
+                0x0000000000000230                main
+ .text.resetADC
+                0x0000000000000252        0xa main.o
+                0x0000000000000252                resetADC
+ .text.checkTemperature
+                0x000000000000025c       0x24 main.o
+                0x000000000000025c                checkTemperature
  .text.uart_init
-                0x000000000000023a       0x1c UART.o
-                0x000000000000023a                uart_init
- .text.uart_getByte
-                0x0000000000000256        0xe UART.o
-                0x0000000000000256                uart_getByte
+                0x0000000000000280       0x22 UART.o
+                0x0000000000000280                uart_init
  .text.uart_putByte
-                0x0000000000000264        0xe UART.o
-                0x0000000000000264                uart_putByte
- .text.init_adc
-                0x0000000000000272        0xe ADC.o
-                0x0000000000000272                init_adc
-                0x0000000000000280                . = ALIGN (0x2)
+                0x00000000000002a2        0xe UART.o
+                0x00000000000002a2                uart_putByte
+ .text.uart_putChar
+                0x00000000000002b0        0xe UART.o
+                0x00000000000002b0                uart_putChar
+ .text.uart_putString
+                0x00000000000002be       0x3a UART.o
+                0x00000000000002be                uart_putString
+                0x00000000000002f8                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x0000000000000280        0x0 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
-                0x0000000000000280                exit
-                0x0000000000000280                _exit
+ .fini9         0x00000000000002f8        0x0 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
+                0x00000000000002f8                exit
+                0x00000000000002f8                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -346,46 +354,50 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x0000000000000280        0x4 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
+ .fini0         0x00000000000002f8        0x4 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
  *(.fini0)
-                0x0000000000000284                _etext = .
+                0x00000000000002fc                _etext = .
 
-.data           0x0000000000800100        0x0 load address 0x0000000000000284
+.data           0x0000000000800100        0xa load address 0x00000000000002fc
                 0x0000000000800100                PROVIDE (__data_start, .)
  *(.data)
  .data          0x0000000000800100        0x0 /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/crtm328p.o
+ .data          0x0000000000800100        0x0 lightSensor.o
+ .data          0x0000000000800100        0x0 tempSensor.o
  .data          0x0000000000800100        0x0 AVR_TTC_scheduler.o
  .data          0x0000000000800100        0x0 main.o
  .data          0x0000000000800100        0x0 UART.o
- .data          0x0000000000800100        0x0 ADC.o
  .data          0x0000000000800100        0x0 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
  .data          0x0000000000800100        0x0 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_copy_data.o)
  .data          0x0000000000800100        0x0 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_clear_bss.o)
  *(.data*)
  *(.rodata)
  *(.rodata*)
+ .rodata.str1.1
+                0x0000000000800100        0x9 main.o
  *(.gnu.linkonce.d*)
-                0x0000000000800100                . = ALIGN (0x2)
-                0x0000000000800100                _edata = .
-                0x0000000000800100                PROVIDE (__data_end, .)
+                0x000000000080010a                . = ALIGN (0x2)
+ *fill*         0x0000000000800109        0x1 
+                0x000000000080010a                _edata = .
+                0x000000000080010a                PROVIDE (__data_end, .)
 
-.bss            0x0000000000800100       0x23
-                0x0000000000800100                PROVIDE (__bss_start, .)
+.bss            0x000000000080010a       0x23
+                0x000000000080010a                PROVIDE (__bss_start, .)
  *(.bss)
  *(.bss*)
  *(COMMON)
- COMMON         0x0000000000800100       0x23 AVR_TTC_scheduler.o
-                0x0000000000800100                SCH_tasks_G
-                0x0000000000800123                PROVIDE (__bss_end, .)
-                0x0000000000000284                __data_load_start = LOADADDR (.data)
-                0x0000000000000284                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x000000000080010a       0x23 AVR_TTC_scheduler.o
+                0x000000000080010a                SCH_tasks_G
+                0x000000000080012d                PROVIDE (__bss_end, .)
+                0x00000000000002fc                __data_load_start = LOADADDR (.data)
+                0x0000000000000306                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x0000000000800123        0x0
-                0x0000000000800123                PROVIDE (__noinit_start, .)
+.noinit         0x000000000080012d        0x0
+                0x000000000080012d                PROVIDE (__noinit_start, .)
  *(.noinit*)
-                0x0000000000800123                PROVIDE (__noinit_end, .)
-                0x0000000000800123                _end = .
-                0x0000000000800123                PROVIDE (__heap_start, .)
+                0x000000000080012d                PROVIDE (__noinit_end, .)
+                0x000000000080012d                _end = .
+                0x000000000080012d                PROVIDE (__heap_start, .)
 
 .eeprom         0x0000000000810000        0x0
  *(.eeprom*)
@@ -406,19 +418,22 @@ END GROUP
 .user_signatures
  *(.user_signatures*)
 
-.stab           0x0000000000000000     0x1410
+.stab           0x0000000000000000     0x1860
  *(.stab)
- .stab          0x0000000000000000      0x864 AVR_TTC_scheduler.o
- .stab          0x0000000000000864      0x450 main.o
-                                        0x660 (size before relaxing)
- .stab          0x0000000000000cb4      0x444 UART.o
+ .stab          0x0000000000000000      0x474 lightSensor.o
+                                        0x540 (size before relaxing)
+ .stab          0x0000000000000474      0x420 tempSensor.o
+                                        0x5dc (size before relaxing)
+ .stab          0x0000000000000894      0x6a8 AVR_TTC_scheduler.o
+                                        0x864 (size before relaxing)
+ .stab          0x0000000000000f3c      0x444 main.o
+                                        0x738 (size before relaxing)
+ .stab          0x0000000000001380      0x4e0 UART.o
                                         0x75c (size before relaxing)
- .stab          0x00000000000010f8      0x318 ADC.o
-                                        0x54c (size before relaxing)
 
-.stabstr        0x0000000000000000      0xf6a
+.stabstr        0x0000000000000000     0x10ca
  *(.stabstr)
- .stabstr       0x0000000000000000      0xf6a AVR_TTC_scheduler.o
+ .stabstr       0x0000000000000000     0x10ca lightSensor.o
 
 .stab.excl
  *(.stab.excl)
@@ -434,11 +449,12 @@ END GROUP
 
 .comment        0x0000000000000000       0x11
  *(.comment)
- .comment       0x0000000000000000       0x11 AVR_TTC_scheduler.o
+ .comment       0x0000000000000000       0x11 lightSensor.o
                                          0x12 (size before relaxing)
+ .comment       0x0000000000000000       0x12 tempSensor.o
+ .comment       0x0000000000000000       0x12 AVR_TTC_scheduler.o
  .comment       0x0000000000000000       0x12 main.o
  .comment       0x0000000000000000       0x12 UART.o
- .comment       0x0000000000000000       0x12 ADC.o
 
 .note.gnu.build-id
  *(.note.gnu.build-id)

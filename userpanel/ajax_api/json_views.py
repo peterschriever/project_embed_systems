@@ -43,8 +43,10 @@ def testCommandCommunication(request):
     resolveCmd = UnitCommunication.sendCommand(getTempCmd, toUnits)
     return HttpResponse([resolveCmd])
 
+@csrf_exempt # for debugging
 def getConnectedDevices(request):
-    tempdict = getConnectedDevicesInfo()
+    # tempdict = getConnectedDevicesInfo()
+    tempdict = UnitScanner.getConnectedDevicesInfo()
     d = {
         'count': len(tempdict),
         'info': tempdict

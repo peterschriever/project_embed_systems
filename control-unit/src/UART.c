@@ -7,7 +7,7 @@ void uart_init() {
   UBRR0H = 0;
   UBRR0L = UBBRVAL;
   // disable U2X mode
-  UCSR0A = 0;
+  UCSR0A &= ~(1 << U2X0);
   // enable transmitter and receiver
   UCSR0B = _BV(TXEN0)|_BV(RXEN0);
   // set frame format : asynchronous, 8 data bits, 1 stop bit, no parity

@@ -84,3 +84,18 @@ class UnitScanner:
             else:
                 #error
                 return False
+
+    def getConnectedDevicesInfo():
+        deviceinfo = UnitScanner.scanPorts('all')
+
+        parsedinfo = {}
+        i = 0
+        for device in deviceinfo:
+            parsedinfo[i] = {'port':device[0], \
+            'serial':device[1], \
+            'description':device[2]}
+            i += 1
+
+        UnitScanner.writeToCache(UnitScanner.cacheDir + "devices.json", parsedinfo)
+
+        return deviceinfo
