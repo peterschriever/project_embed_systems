@@ -6,6 +6,8 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from control_unit.functions import *
 
 cacheDir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "\\control_unit\\json_cache\\"
+configDir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "\\control_unit\\config\\"
+
 
 #ajax/json response generator
 def buildResponse(dict, error=False):
@@ -58,7 +60,7 @@ def setDeviceSettings(request):
     
     #get min/max and default settings from file
     #any setting not included in the POST will use the default setting
-    minmaxSet = readFromCache(cacheDir + 'settingsInfo.json', 'dict')
+    minmaxSet = readFromCache(configDir + 'settingsConfig.json', 'dict')
     MINSET = minmaxSet['min']
     MAXSET = minmaxSet['max']
     default = minmaxSet['default']
@@ -81,7 +83,7 @@ def setDeviceSettings(request):
     #only chance the default values
     if(deviceID == 'default'):
         minmaxSet['default'] = newsettings
-        writeToCache(cacheDir + 'settingsInfo.json', minmaxSet)
+        writeToCache(configDir + 'settingsConfig.json', minmaxSet)
         return
         
         
