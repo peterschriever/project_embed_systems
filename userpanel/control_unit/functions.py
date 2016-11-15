@@ -60,7 +60,7 @@ def readFromDevice(device, length = 8):
     else:
         #if not a number, or not between 1 and 100, then don't try reading
         return None
-    
+     
 #writes @data@ to @device@; where @device@ is either port or serial
 #@data@ should be of type bytes
 def writeToDevice(device, data):
