@@ -36,7 +36,7 @@ void uart_putString(char *source) {
   }
 }
 
-void uart_putDouble(uint16_t dbl) {
+void uart_putTwoBytes(uint16_t dbl) {
   uart_putByte(high(dbl));
   uart_putByte(low(dbl));
 }

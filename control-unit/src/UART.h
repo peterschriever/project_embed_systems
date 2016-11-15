@@ -12,4 +12,4 @@ char uart_getByte(void);
 void uart_putByte(uint8_t c);
 void uart_putChar(char c);
 void uart_putString(char *source);
-void uart_putDouble(uint16_t dbl);
+void uart_putTwoBytes(uint16_t dbl);

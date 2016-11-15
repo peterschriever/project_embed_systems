@@ -27,7 +27,7 @@ void initTempADC() {
     ADCSRA |= (1<<ADSC);                            // start sampling
 }
 
-uint16_t sampleTempADC(channel) {
+uint16_t sampleTempADC(uint8_t channel) {
 // Returns 8 bit reading (left justified)
     uint16_t adcVal = 0;
     ADMUX &= ~((1<<MUX3)|(1<<MUX2)|(1<<MUX1)|(1<<MUX0)); // Clear ADC Mux Bits
