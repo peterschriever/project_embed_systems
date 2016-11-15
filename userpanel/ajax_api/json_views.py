@@ -122,21 +122,25 @@ def getGraphUpdate(request):
     returndata = {}
     newSensordata = sensordata
     
+    if(deviceports == {}):
+        return buildErrorResponse({'error_msg':'aaaaaaaaaaaaaaaargh'})
+    
     for dev, port in deviceports.items():
         if(deviceID == None or deviceID == dev):
             timestamp = sensordata.get(dev, {'timestamp':None}).get('timestamp', None)
             if(timestamp == None or (currentTime - int(timestamp)) > 3600):
                 result = sendCommandToDevice(port, 'getSensorValues')
-                
                 if(result == None):
                     return buildErrorResponse({'error_msg':'failed to retrieve sensor values from device'})
                 else:
+                    result['temp'] = tempSensorToC(result['temp'])
                     returndata[dev] = [result['temp'], result['light']]
                     newSensordata[dev] = {'timestamp':currentTime, 'temp':result['temp'], 'light':result['light']}
             else:
                 returndata[dev] = [data.get('temp'), data.get('light')]
     writeToCache(cacheDir + 'sensordata.json', newSensordata)
-    return buildErrorResponse({'error_msg':'this function is not yet fully supported by the API', 'errorcode':'111111'})
+    
+    return buildResponse({'data':returndata})
 
 def getWindowblindState(request):
 
