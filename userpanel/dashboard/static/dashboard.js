@@ -13,6 +13,7 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
 $(function () {
 
     var csrftoken = getCookie('csrftoken');
