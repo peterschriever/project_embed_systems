@@ -1,26 +1,27 @@
-from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse, HttpRequest
+from django.http import HttpResponse
 import json
+import math
 import os
 import sys
+import time
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from control_unit.submodels.CommandIdentifier import *
-from control_unit.submodels.UnitCommunication import *
-from control_unit.submodels.UnitScanner import *
+from control_unit.functions import *
 
 cacheDir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "\\control_unit\\json_cache\\"
+configDir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "\\control_unit\\config\\"
+
 
 #ajax/json response generator
-def buildResponse(dictIn, error=False):
+def buildResponse(dict, error = False):
     resp = {} #response dict
-    if('error' in dictIn or error == True):#error array
+    if('error' in dict or error == True):#error array
         #2nd parameter in .get is the default value
-        resp['error'] = dictIn.get('error', True)
-        resp['errorcode'] = dictIn.get('errorcode', '000000')
-        resp['error_msg'] = dictIn.get('error_msg', 'Unknown error')
-        resp['extra'] = dictIn.get('extra', None)
+        resp['error'] = dict.get('error', True)
+        resp['errorcode'] = dict.get('errorcode', '000000')
+        resp['error_msg'] = dict.get('error_msg', 'Unknown error')
+        resp['extra'] = dict.get('extra', None)
     else:
-        resp = dictIn
+        resp = dict
         resp['error'] = False
     return HttpResponse(json.dumps(resp))
 
@@ -28,25 +29,14 @@ def buildErrorResponse(dict):
     return buildResponse(dict, True)
 
 # Create your views here.
-@csrf_exempt # for debugging
 def templateFunction(request):
-    if request.method == "POST":
-        jsonObj = json.loads(request.body.decode('utf-8'))
-    else:
-        jsonObj = {}
-    return buildResponse(jsonObj)
+    for key, val in request.POST.items():
+        #do stuff
+        print(key + ":" + val)
+    return buildResponse(request.POST)
 
-@csrf_exempt # for debugging
-def testCommandCommunication(request):
-    getTempCmd = CommandIdentifier.getCommand('getLightLevel')
-    toUnits = UnitScanner.getAllUnits()
-    resolveCmd = UnitCommunication.sendCommand(getTempCmd, toUnits)
-    return HttpResponse([resolveCmd])
-
-@csrf_exempt # for debugging
 def getConnectedDevices(request):
-    # tempdict = getConnectedDevicesInfo()
-    tempdict = UnitScanner.getConnectedDevicesInfo()
+    tempdict = getConnectedDevicesInfo()
     d = {
         'count': len(tempdict),
         'info': tempdict
@@ -72,7 +62,7 @@ def setDeviceSettings(request):
 
     #get min/max and default settings from file
     #any setting not included in the POST will use the default setting
-    minmaxSet = readFromCache(cacheDir + 'settingsInfo.json', 'dict')
+    minmaxSet = readFromCache(configDir + 'settingsConfig.json', 'dict')
     MINSET = minmaxSet['min']
     MAXSET = minmaxSet['max']
     default = minmaxSet['default']
@@ -95,7 +85,7 @@ def setDeviceSettings(request):
     #only chance the default values
     if(deviceID == 'default'):
         minmaxSet['default'] = newsettings
-        writeToCache(cacheDir + 'settingsInfo.json', minmaxSet)
+        writeToCache(configDir + 'settingsConfig.json', minmaxSet)
         return
 
 
@@ -112,7 +102,7 @@ def setDeviceSettings(request):
             if(sendCommandToDevice(dict[device]['port'], 'setSettings', newsettings)):
                 counter += 1
                 #update the cached dictionary
-                dict[device] = {'port':dict[device]['port'], 'settings':newsettings}
+                dict[device] = newsettings
             else:
                 #something went wrong
                 return buildErrorResponse({'error_msg':'something went wrong while trying to send new settings to the device..', \
@@ -123,30 +113,38 @@ def setDeviceSettings(request):
     return buildResponse({'msg':'applied settings to ' + counter + ' devices', 'counter':counter})
 
 def getGraphUpdate(request):
-    scanPorts() #to force update on connected device cache
+    deviceports = scanPorts('ports') #to force update on connected devices cache
     deviceID = request.POST.get('deviceID')
+    if(deviceID == ""):
+        deviceID = None
     sensordata = readFromCache(cacheDir + 'sensordata.json', 'dict')
+    currentTime = int(math.floor(time.time()))
+    returndata = {}
+    newSensordata = sensordata
 
-    if(deviceID == None):
-        #TODO
-        #get data for all devices
-        return
-    else:
-        #TODO: get current timestamp
-        currentTime = 300
-        timestamp = sensordata[deviceID].get('timestamp', None)
-        if(timestamp == None or (currentTime - timestamp) > 3600):
-            #TODO
-            #get sensor data
-            return buildErrorResponse({'error_msg':'this function is not yet fully supported by the API'})
-        else:
-            return buildResponse(sensordata[deviceID])
+    if(deviceports == {}):
+        return buildErrorResponse({'error_msg':'aaaaaaaaaaaaaaaargh'})
 
-    return buildErrorResponse({'error_msg':'this function is not yet fully supported by the API'})
+    for dev, port in deviceports.items():
+        if(deviceID == None or deviceID == dev):
+            timestamp = sensordata.get(dev, {'timestamp':None}).get('timestamp', None)
+            if(timestamp == None or (currentTime - int(timestamp)) > 3600):
+                result = sendCommandToDevice(port, 'getSensorValues')
+                if(result == None):
+                    return buildErrorResponse({'error_msg':'failed to retrieve sensor values from device'})
+                else:
+                    result['temp'] = tempSensorToC(result['temp'])
+                    returndata[dev] = [result['temp'], result['light']]
+                    newSensordata[dev] = {'timestamp':currentTime, 'temp':result['temp'], 'light':result['light']}
+            else:
+                returndata[dev] = [data.get('temp'), data.get('light')]
+    writeToCache(cacheDir + 'sensordata.json', newSensordata)
+
+    return buildResponse({'data':returndata})
 
 def getWindowblindState(request):
 
-    return buildErrorResponse({'error_msg':'this function is not yet fully supported by the API'})
+    return buildErrorResponse({'error_msg':'this function is not yet fully supported by the API', 'errorcode':'111111'})
 
 def setWindowblindState(request):
-    return buildErrorResponse({'error_msg':'this function is not yet fully supported by the API'})
+    return buildErrorResponse({'error_msg':'this function is not yet fully supported by the API', 'errorcode':'111111'})

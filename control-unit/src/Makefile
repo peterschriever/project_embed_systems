@@ -22,7 +22,7 @@ LIBDIR = ./lib/
 
 PROGRAMMER_TYPE = arduino
 # extra arguments to avrdude: baud rate, chip type, -F flag, etc.
-PROGRAMMER_ARGS = -v -P /dev/ttyACM4
+PROGRAMMER_ARGS = -v -P /dev/ttyACM0
 
 ##########------------------------------------------------------##########
 ##########                  Program Locations                   ##########

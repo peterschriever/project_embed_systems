@@ -1,0 +1,20 @@
+{
+    "default": {
+        "distMin": "5",
+        "distMax": "160",
+        "temp": "1",
+        "light": "1"
+    },
+    "min": {
+        "distMin": "0",
+        "distMax": "0",
+        "temp": "0",
+        "light": "0"
+    },
+    "max": {
+        "distMin": "255",
+        "distMax": "255",
+        "temp": "255",
+        "light": "1023"
+    }
+}

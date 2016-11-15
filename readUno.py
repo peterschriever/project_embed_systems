@@ -9,7 +9,7 @@ def read_byte():
     byte = ord(ser.read(1))
     return byte
 
-def read_double():
+def read_twoBytes():
     firstByte = (ord(ser.read(1)) << 8)
     secondByte = (ord(ser.read(1)))
     return firstByte + secondByte
@@ -27,13 +27,21 @@ def read_unknown():
     else:
         return "Light: "+str(read_double())
 
+# ser.read(20)
+
 for i in range(0, 500):
     # temp = read_byte()
     # temp *= (5000.0/1024)
     # temp -= 500
     # temp /= 10
     # print(temp)
-    print(read_unknown())
-    time.sleep(.30)
+    firstResponse = hex(ord(ser.read(1)))
+    # if firstResponse == "0x30":
+    #     # vind response code in json file
+    #     # if collectMore ->
+    #     # doe loop tot collectMore klaar is
+    #     print("received 0x30!~")
+    print("firstResponse: ", firstResponse)
+
 
 ser.close()

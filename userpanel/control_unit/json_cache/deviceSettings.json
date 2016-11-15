@@ -1,13 +1,2 @@
-{
-    "55431303937351F04012": {
-        "port": "COM2",
-        "settings": {
-            "temp": "",
-            "distance": {
-                "min": "",
-                "max": ""
-            },
-            "light": ""
-        }
-    }
-}
+
+{"75435353138351D07102": {"light": "1", "distMax": "160", "distMin": "5", "temp": "1"}, "55431303937351F04012": {"light": "1", "distMax": "160", "distMin": "5", "temp": "1"}, "8543833323635131E161": {"light": "1", "distMax": "160", "distMin": "5", "temp": "1"}}
