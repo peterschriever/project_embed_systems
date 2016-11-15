@@ -1,7 +1,9 @@
 from django.http import HttpResponse
 import json
+import math
 import os
 import sys
+import time
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from control_unit.functions import *
 
@@ -10,7 +12,7 @@ configDir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "\\con
 
 
 #ajax/json response generator
-def buildResponse(dict, error=False):
+def buildResponse(dict, error = False):
     resp = {} #response dict
     if('error' in dict or error == True):#error array
         #2nd parameter in .get is the default value
@@ -100,7 +102,7 @@ def setDeviceSettings(request):
             if(sendCommandToDevice(dict[device]['port'], 'setSettings', newsettings)):
                 counter += 1
                 #update the cached dictionary
-                dict[device] = {'port':dict[device]['port'], 'settings':newsettings}
+                dict[device] = newsettings
             else:
                 #something went wrong
                 return buildErrorResponse({'error_msg':'something went wrong while trying to send new settings to the device..', \
@@ -111,30 +113,34 @@ def setDeviceSettings(request):
     return buildResponse({'msg':'applied settings to ' + counter + ' devices', 'counter':counter})
 
 def getGraphUpdate(request):
-    scanPorts() #to force update on connected device cache
+    deviceports = scanPorts('ports') #to force update on connected devices cache
     deviceID = request.POST.get('deviceID')
+    if(deviceID == ""):
+        deviceID = None
     sensordata = readFromCache(cacheDir + 'sensordata.json', 'dict')
+    currentTime = int(math.floor(time.time()))
+    returndata = {}
+    newSensordata = sensordata
     
-    if(deviceID == None):
-        #TODO
-        #get data for all devices
-        return
-    else:
-        #TODO: get current timestamp
-        currentTime = 300
-        timestamp = sensordata[deviceID].get('timestamp', None)
-        if(timestamp == None or (currentTime - timestamp) > 3600):
-            #TODO
-            #get sensor data
-            return buildErrorResponse({'error_msg':'this function is not yet fully supported by the API'})
-        else:
-            return buildResponse(sensordata[deviceID])
-    
-    return buildErrorResponse({'error_msg':'this function is not yet fully supported by the API'})
+    for dev, port in deviceports.items():
+        if(deviceID == None or deviceID == dev):
+            timestamp = sensordata.get(dev, {'timestamp':None}).get('timestamp', None)
+            if(timestamp == None or (currentTime - int(timestamp)) > 3600):
+                result = sendCommandToDevice(port, 'getSensorValues')
+                
+                if(result == None):
+                    return buildErrorResponse({'error_msg':'failed to retrieve sensor values from device'})
+                else:
+                    returndata[dev] = [result['temp'], result['light']]
+                    newSensordata[dev] = {'timestamp':currentTime, 'temp':result['temp'], 'light':result['light']}
+            else:
+                returndata[dev] = [data.get('temp'), data.get('light')]
+    writeToCache(cacheDir + 'sensordata.json', newSensordata)
+    return buildErrorResponse({'error_msg':'this function is not yet fully supported by the API', 'errorcode':'111111'})
 
 def getWindowblindState(request):
 
-    return buildErrorResponse({'error_msg':'this function is not yet fully supported by the API'})
+    return buildErrorResponse({'error_msg':'this function is not yet fully supported by the API', 'errorcode':'111111'})
 
 def setWindowblindState(request):
-    return buildErrorResponse({'error_msg':'this function is not yet fully supported by the API'})
+    return buildErrorResponse({'error_msg':'this function is not yet fully supported by the API', 'errorcode':'111111'})

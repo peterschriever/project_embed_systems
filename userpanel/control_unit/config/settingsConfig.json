@@ -1,23 +1,20 @@
 {
     "default": {
+        "distMin": "5",
+        "distMax": "160",
         "temp": "1",
-        "distMax": "10",
-        "distMin": "1",
         "light": "1"
-
     },
     "min": {
-        "temp": "1",
-        "distMax": "1",
-        "distMin": "1",
-        "light": "1"
-
+        "distMin": "0",
+        "distMax": "0",
+        "temp": "0",
+        "light": "0"
     },
     "max": {
-        "temp": "20",
-        "distMax": "20",
-        "distMin": "20",
-        "light": "20"
-
+        "distMin": "255",
+        "distMax": "255",
+        "temp": "255",
+        "light": "1023"
     }
 }

@@ -2,19 +2,25 @@ import json
 import os
 import serial
 import serial.tools.list_ports
+import time
 
 
 cacheDir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "\\control_unit\\json_cache\\"
 configDir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "\\control_unit\\config\\"
 
 def scanPorts(info = ""):
-    ports = []
+    if(info == 'ports'):
+        ports = {}
+    else:
+        ports = []
     for device in serial.tools.list_ports.comports():
         if((device.description).find("Arduino Uno") != -1):
             if(isNewDevice(device)):
                 initNewDevice(device)
             if(info == 'all'):
                 ports.append([device.device, device.serial_number, device.description])
+            elif(info == 'ports'):
+                ports[device.serial_number] = device.device
             else:
                 ports.append(device.device)
     return ports
@@ -83,7 +89,7 @@ def sendCommandToDevice(port, command, extra = None):
     devlist = scanPorts('all')
     connected = False
     for dev in devlist:
-        if(dev.device == port):
+        if(dev[0] == port):
             connected = True
             break
     if(connected == False):
@@ -91,13 +97,17 @@ def sendCommandToDevice(port, command, extra = None):
     
     
     #define all command functions to generate the serial message to be send
-    def sendSettings(command, extra = {}):
-        returnAmount = 8
+    def sendSettings(port, command, extra = {}):
+        
         #do stuff
         extra = extra #useless assingment to hide annoying msg from IDE ;)
         command = command #ditto
-        return {'msg':'test', 'returns':returnAmount}
-    def sendDefaultCmd(command, extra = None):
+        return {'done':True, 'return':''}
+    def getSensorValues(port, command, extra = {}):
+        temp = sendCommandToDevice(port, 'getTemperature')
+        light = sendCommandToDevice(port, 'getLightLevel')
+        return {'done':True, 'return':{'temp':temp, 'light':light}}
+    def sendDefaultCmd(port, command, extra = None):
         cmd = getCommandDetails(command)
         if(cmd == None):
             return None #command not found
@@ -105,26 +115,37 @@ def sendCommandToDevice(port, command, extra = None):
         msg = [cmd['byteCode']]
         i = 0
         while(cmd.get('sendMore', 0) > 0):
-            msg.append(extra.get(i,"0x00"))
+            msg.append(extra.get(i, "0x00"))
             cmd['sendMore'] -= 1
             i += 1
-        returnAmount = 8 #amount of bytes to read after this msg
         extra = extra #useless assingment to hide annoying msg from IDE ;)
-        return {'msg':msg, 'returns':returnAmount}
+        return {'msg':msg}
     
     #find out what command we're dealing with
-    deviceCommands = {'defaultCmd':sendDefaultCmd}#, \
+    deviceCommands = {'defaultCmd':sendDefaultCmd, \
+    'getSensorValues':getSensorValues}#, \
     #'setSettings':sendSettings}
     
-    data = deviceCommands.get(command, sendDefaultCmd)(command, extra)
+    data = deviceCommands.get(command, sendDefaultCmd)(port, command, extra)
+    if(data == None):
+        return None
+    if(data.get('done', False)):
+        return data['return']
     
     ser = serial.Serial(port, 19200)
-    ser.write([data['msg']])
+    print(data['msg'])
     
-    if(data['returns'] < 1):
+    ser.write(data['msg'])
+    
+    responseCode = ser.read(1)
+    response = getCommandDetails(responseCode, 'bytecode')
+    if(response['response'] == "FAIL"):
         return None
     else:
-        return ser.read(data['returns'])
+        if(response.get('collectMore') > 0):
+            return ser.read(response['collectMore'])
+        else:
+            return responseCode
     
     
 def getCommandDetails(search, searchOn = None):
@@ -165,8 +186,8 @@ def initNewDevice(device):#device from scanPorts()
     
     if((device.serial_number in settingsCache) == False):#if not in cache
         default = readFromCache(configDir + 'settingsConfig.json', 'dict')['default']
-        newSettingsCache = settingsCache.get(device.serial_number, default)
-        writeToCache(configDir + 'settingsConfig.json', newSettingsCache)
+        settingsCache[device.serial_number] = settingsCache.get(device.serial_number, default)
+        writeToCache(cacheDir + 'deviceSettings.json', settingsCache)
     
     i = 0
     for dev in deviceCache:
@@ -175,9 +196,9 @@ def initNewDevice(device):#device from scanPorts()
             return #all done
         
     #add device to deviceCache
-    deviceCache[i] = {'port':device[0], \
-        'serial':device[1], \
-        'description':device[2]}
+    deviceCache[i] = {'port':device.device, \
+        'serial':device.serial_number, \
+        'description':device.description}
     writeToCache(cacheDir + 'devices.json', deviceCache)
     return #all done
     
