@@ -46,7 +46,12 @@ def writeToCache(location, data):
             #error
             return False
      
-            
+def readByte(ser):
+    return ord(ser.read(1));
+
+def readDoubleByte(ser):
+    return (ord(ser.read(1)) << 8) + ord(ser.read(1))
+
 #reads @length@ from @device@; where @device@ is either port or serial
 #@lenght@ will generally be either 8 or 16
 def readFromDevice(device, length = 8):
@@ -140,11 +145,15 @@ def sendCommandToDevice(port, command, extra = None):
     responseCode = ser.read(1)
     response = getCommandDetails(responseCode, 'bytecode')
     if(response['response'] == "FAIL"):
+        ser.close()
         return None
     else:
-        if(response.get('collectMore') > 0):
-            return ser.read(response['collectMore'])
+        if(response.get('collectMore') == 1):
+            return readByte(ser)
+        elif(response.get('collectMore' == 2)):
+            return readDoubleByte(ser)
         else:
+            ser.close()
             return responseCode
     
     
