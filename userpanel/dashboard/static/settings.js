@@ -77,7 +77,10 @@ function loadSettings(sel) {
             }
             console.log('ERROR - getConnectedDevices(): ' + data.error_msg);
         } else {
-            
+            $("#distMax").val(data.distMax);
+            $("#distMin").val(data.distMin);
+            $("#light").val(data.light);
+            $("#temp").val(data.temp);
         }
     }, "json");
 }

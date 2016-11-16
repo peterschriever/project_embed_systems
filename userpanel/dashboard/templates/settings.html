@@ -18,19 +18,17 @@
                   <div class="col-sm-10 col-sm-offset-1 rolloutSettings">
                     <span class="value-notice">Value should be in centimeters from the top of the window blind (cm)</span>
                     <label for="maxRolloutAmount">How far down would you like the window blinds to be when rolled down?</label>
-                    <input type="number" min="0" step="1" max="160" value="160" class="form-control" id="maxRolloutAmount" name="maxRolloutAmount">
+                    <input type="number" min="0" step="1" max="160" value="160" class="form-control" id="distMax" name="maxRolloutAmount">
                     <label for="maxRolloutAmount">How far down would you like the window blinds to be when rolled up?</label>
-                    <input type="number" min="0" step="1" max="160" value="5"class="form-control" id="minRolloutAmount" name="minRolloutAmount">
+                    <input type="number" min="0" step="1" max="160" value="5"class="form-control" id="distMin" name="minRolloutAmount">
                   </div>
                   <div class="col-sm-10 col-sm-offset-1 temperatureBoundaries">
-                    <span class="value-notice">Value should be in degrees celsius (°C)</span>
+                    <span class="value-notice">Value should be in degrees Celsius (°C)</span>
                     <label for="maxRolloutAmount">At what temperature should the window blinds roll down?</label>
-                    <input type="number" min="0" step="1" max="60" value="25"
-                    class="form-control" id="maxTemperature" name="maxTemperature">
+                    <input type="number" min="0" step="1" max="60" value="25"class="form-control" id="temp" name="maxTemperature">
                     <span class="value-notice">Value should be between 0 and 1023, 0 is very dark and 1023 is very bright</span>
                     <label for="maxRolloutAmount">At what lightintensity should the window blinds roll down?</label>
-                    <input type="number" min="0" step="1" max="1023" value="700"
-                    class="form-control" id="maxLightIntensity" name="maxLightIntensity">
+                    <input type="number" min="0" step="1" max="1023" value="700"class="form-control" id="light" name="maxLightIntensity">
                   </div>
                   <div class="col-sm-2 submitBtnContainer">
                     <input type="submit" class="btn btn-primary form-control" value="Submit" />
