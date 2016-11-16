@@ -68,8 +68,6 @@ function initNewDevice(devID) {
         htmlcode = htmlcode + "                                        <div id=\"temp-chart-" + devID + "\"></div>";
         htmlcode = htmlcode + "                                    </div>";
         htmlcode = htmlcode + "                                </div>";
-        htmlcode = htmlcode + "                                <button onclick=\"addDataPoint(" + devID + ", 0, null);\">Add Data Point</button>  ";
-        htmlcode = htmlcode + "                                <button onclick=\"updateDataPoint(" + devID + ", 0, null, null);\">Update Data Point</button>";
         htmlcode = htmlcode + "                            </div>";
         htmlcode = htmlcode + "                        </div>";
         htmlcode = htmlcode + "                    </div>";
@@ -84,8 +82,6 @@ function initNewDevice(devID) {
         htmlcode = htmlcode + "                                        <div id=\"light-chart-" + devID + "\"></div>";
         htmlcode = htmlcode + "                                    </div>";
         htmlcode = htmlcode + "                                </div>";
-        htmlcode = htmlcode + "                                <button onclick=\"addDataPoint(" + devID + ", 1, null);\">Add Data Point</button>  ";
-        htmlcode = htmlcode + "                                <button onclick=\"updateDataPoint(" + devID + ", 1, null, null);\">Update Data Point</button>";
         htmlcode = htmlcode + "                            </div>";
         htmlcode = htmlcode + "                        </div>";
         htmlcode = htmlcode + "                    </div>";
@@ -106,7 +102,7 @@ function initNewDevice(devID) {
             theme: "theme1",
             axisX: {
                 labelFontSize: 14,
-                title: "Minutes"
+                title: "Time"
 
             },
             axisY: {
@@ -121,12 +117,12 @@ function initNewDevice(devID) {
                 {
                     type: "spline", //change type to bar, line, area, pie, etc
                     dataPoints: [
-                        {x: -5, y: 14},
-                        {x: -4, y: 18},
-                        {x: -3, y: 07},
-                        {x: -2, y: -1},
-                        {x: -1, y: 15},
-                        {x: 0, y: 13}
+                        // {x: -5, y: 14},
+                        // {x: -4, y: 18},
+                        // {x: -3, y: 07},
+                        // {x: -2, y: -1},
+                        // {x: -1, y: 15},
+                        {x: 0, y: 0}
                     ]
                 }
             ]
@@ -137,7 +133,7 @@ function initNewDevice(devID) {
             theme: "theme1",
             axisX: {
                 labelFontSize: 14,
-                title: "Minutes"
+                title: "Time"
 
             },
             axisY: {
@@ -152,12 +148,12 @@ function initNewDevice(devID) {
                 {
                     type: "spline", //change type to bar, line, area, pie, etc
                     dataPoints: [
-                        {x: -5, y: 14},
-                        {x: -4, y: 18},
-                        {x: -3, y: 07},
-                        {x: -2, y: -1},
-                        {x: -1, y: 15},
-                        {x: 0, y: 13}
+                        // {x: -5, y: 14},
+                        // {x: -4, y: 18},
+                        // {x: -3, y: 07},
+                        // {x: -2, y: -1},
+                        // {x: -1, y: 15},
+                        {x: 0, y: 0}
                     ]
                 }
             ]
@@ -292,8 +288,10 @@ $(function () {
 
     //get graph data
     getGraphUpdates();
+
     //poll every 60 seconds
-    window.setInterval(getGraphUpdates(), 60000);
+    // window.setInterval(getGraphUpdates(), 60000);
+    window.setInterval(getGraphUpdates, 5000);
 
 
 });

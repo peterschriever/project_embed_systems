@@ -3,6 +3,7 @@ import os
 import serial
 import serial.tools.list_ports
 import time
+from django.conf import settings
 
 _DS = os.sep
 cacheDir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + _DS+"control_unit"+_DS+"json_cache"+_DS
@@ -52,6 +53,7 @@ def readByte(ser):
 def readDoubleByte(ser):
     firstByte = (ord(ser.read(1)) << 8)
     secondByte = ord(ser.read(1))
+    print("doubleByte", firstByte + secondByte)
     return firstByte + secondByte
 
 #reads @length@ from @device@; where @device@ is either port or serial
@@ -66,7 +68,7 @@ def readFromDevice(device, length = 8):
     if(port == None):
         #device not connected/found
         return None
-    elif(isinstance(length, int) and (length > 1) and (length < 100)):
+    elif(isinstance(length, int) and (length > 1) and (length < settings._CACHING_PERIOD)):
         #init serial connection
         ser = serial.Serial(port, 19200)
         return ser.read(length)
@@ -111,7 +113,7 @@ def sendCommandToDevice(port, command, extra = None):
         command = command #ditto
         return {'done':True, 'return':''}
     def getSensorValues(port, command, extra = {}):
-        temp = sendCommandToDevice(port, 'getTemperature')
+        temp = sendCommandToDevice(port, 'getTemperature') # NOTE: maybe shift to adjust for reading here
         light = sendCommandToDevice(port, 'getLightLevel')
         return {'done':True, 'return':{'temp':temp, 'light':light}}
     def sendDefaultCmd(port, command, extra = None):
@@ -154,7 +156,7 @@ def sendCommandToDevice(port, command, extra = None):
     else:
         if(response.get('collectMore') == 1):
             return readByte(ser)
-        elif(response.get('collectMore' == 2)):
+        elif(response.get('collectMore') == 2):
             return readDoubleByte(ser)
         else:
             ser.close()
@@ -172,7 +174,6 @@ def getCommandDetails(search, searchOn = None):
         else:
             key = 'tag'
     for item in configDict:
-        print("item in configDict", item)
         if(item[key] == search):
             return item
     return None #nothing found

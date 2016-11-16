@@ -6,6 +6,7 @@ import sys
 import time
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from control_unit.functions import *
+from django.conf import settings
 
 _DS = os.sep
 cacheDir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + _DS+"control_unit"+_DS+"json_cache"+_DS
@@ -129,19 +130,21 @@ def getGraphUpdate(request):
     for dev, port in deviceports.items():
         if(deviceID == None or deviceID == dev):
             timestamp = sensordata.get(dev, {'timestamp':None}).get('timestamp', None)
-            if(timestamp == None or (currentTime - int(timestamp)) > 3600):
+            if(timestamp == None or (currentTime - int(timestamp)) > settings._CACHING_PERIOD):
                 result = sendCommandToDevice(port, 'getSensorValues')
                 if(result == None):
                     return buildErrorResponse({'error_msg':'failed to retrieve sensor values from device'})
                 else:
+                    print("result['temp']", result['temp'])
+                    print("result['light']", result['light'])
                     result['temp'] = tempSensorToC(result['temp'])
                     returndata[dev] = [result['temp'], result['light']]
                     newSensordata[dev] = {'timestamp':currentTime, 'temp':result['temp'], 'light':result['light']}
-                    print("newSensordata[dev]", newSensordata[dev])
             else:
-                returndata[dev] = [sensordata.get(dev, 'temp'), sensordata.get(dev, 'light')]
+                returndata[dev] = [sensordata.get(dev, 'temp')['temp'], sensordata.get(dev, 'light')['light']]
     writeToCache(cacheDir + 'sensordata.json', newSensordata)
 
+    print("returndata", returndata)
     return buildResponse({'data':returndata})
 
 def getWindowblindState(request):
