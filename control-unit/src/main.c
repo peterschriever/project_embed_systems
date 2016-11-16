@@ -36,15 +36,13 @@ int main() {
   init_PORTB();
   setLeds(_BV(PB2));
   uart_init();
+  initTempADC();
   SCH_Init_T1();
   SCH_Start();
-  // SCH_Add_Task(testUART, 0, 5000); // debugging: perform a test every 5s
 
   // sensor checks, 0.5s
-  SCH_Add_Task(checkTemperature, 0, 50);
-  SCH_Add_Task(checkLight, 0, 20);
-
-  // Check if we received anything from the Python code base
+  SCH_Add_Task(checkTemperature, 0, 500);
+  SCH_Add_Task(checkLight, 0, 600);
 
   // SCH_Add_Task(testUART, 0, 50);
 
@@ -74,8 +72,6 @@ void setLeds(uint8_t ledPins) {
 
 void init_PORTB() {
   DDRB = 0xFF; // set output mode
-  // PORTB = 0x00; // leds off
-  // PORTB = 0xff;
 }
 
 void testUART() {
@@ -105,17 +101,18 @@ void changeState(uint8_t upOrDown) {
 }
 
 // gets the temperature value
-uint8_t getTemperature() {
-  initTempADC();
+uint16_t getTemperature() {
+  _delay_ms(10);
   uint8_t temp = sampleTempADC(1);
-  resetADC();
+  // resetADC();
   return temp;
 }
 
 uint16_t getLightLevel() {
-  initTempADC();
+  // initTempADC();
+  _delay_ms(10);
   uint16_t light = sampleTempADC(4);
-  resetADC();
+  // resetADC();
   return light;
 }
 

@@ -1,1 +1,1 @@
-{"0": {"port": "/dev/ttyACM0", "serial": "75435353138351D07102", "description": "Arduino Uno"}}
+{"0": {"port": "/dev/ttyACM0", "description": "Arduino Uno", "serial": "75435353138351D07102"}}

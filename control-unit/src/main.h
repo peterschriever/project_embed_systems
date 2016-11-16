@@ -18,4 +18,4 @@ void changeState(uint8_t upOrDown);
 void initMotorSimTimer();
 void init_PORTB();
 void setLeds(uint8_t ledPins);
-uint8_t getTemperature();
+uint16_t getTemperature();

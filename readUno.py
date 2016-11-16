@@ -1,7 +1,7 @@
 import time
 import serial as s
 
-ser = s.Serial('/dev/ttyACM3', 19200)
+ser = s.Serial('/dev/ttyACM0', 19200)
 time.sleep(1)
 
 # read one byte and use ord to make it an int

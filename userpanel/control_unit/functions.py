@@ -114,6 +114,7 @@ def sendCommandToDevice(port, command, extra = None):
         return {'done':True, 'return':''}
     def getSensorValues(port, command, extra = {}):
         temp = sendCommandToDevice(port, 'getTemperature') # NOTE: maybe shift to adjust for reading here
+        temp = (temp << 2);
         light = sendCommandToDevice(port, 'getLightLevel')
         return {'done':True, 'return':{'temp':temp, 'light':light}}
     def sendDefaultCmd(port, command, extra = None):

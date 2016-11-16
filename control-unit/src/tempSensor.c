@@ -35,6 +35,6 @@ uint16_t sampleTempADC(uint8_t channel) {
         ADMUX |= channel;                             // setup ADC Channel 1
         ADCSRA |= (1 << ADSC);                          // Start a new conversion,
         while(ADCSRA & _BV(ADSC));                      // Wait until conversion is complete and ADSC is cleared
-        adcVal = ADC;                                   // 8 bit reading, ADLAR set
-    return adcVal;
+        return ADCW;                                   // 8 bit reading, ADLAR set
+    // return adcVal;
 }
