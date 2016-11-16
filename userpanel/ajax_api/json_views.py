@@ -53,7 +53,7 @@ def getDeviceSettings(request):
     else:
         for deviceSerial in dict:
             if(deviceSerial == deviceID):
-                return buildResponse(dict[deviceSerial]['settings'])
+                return buildResponse(dict[deviceSerial])
         #not found
         return buildErrorResponse({'error_msg':'Device "' + deviceID + '" not found.', \
                                   'extra':dict})

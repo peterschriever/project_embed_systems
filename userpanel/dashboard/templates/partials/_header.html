@@ -19,7 +19,8 @@
         {# Custom JS #}
         <script src="http://canvasjs.com/assets/script/canvasjs.min.js"></script>
         <script src="{% static "dashboard.js"%}"></script>
-        <script src="{% static "charts.js"%}"></script>
+
+        <script src="{% static jsFile %}"></script>
 
         {% load static %}
         <link rel="stylesheet" href="{% static "master.css" %}" media="screen" charset="utf-8">

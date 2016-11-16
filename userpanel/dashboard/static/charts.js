@@ -271,7 +271,6 @@ function getGraphUpdates() {
         } else {
             var devID;
             $.each(data.data, function (key, val) {
-                console.log(val);
                 devID = $.inArray(key, devices);
                 addDataPoint(devID, 0, val[0]);
                 addDataPoint(devID, 1, val[1]);
@@ -296,77 +295,5 @@ $(function () {
     //poll every 60 seconds
     window.setInterval(getGraphUpdates(), 60000);
 
-    /*
-     var c1 = [];
-     c1.push({'chart': new CanvasJS.Chart("temp-chart-0", {
-     animationEnabled: true,
-     backgroundColor: "transparent",
-     theme: "theme1",
-     axisX: {
-     labelFontSize: 14,
-     title: "Minutes"
 
-     },
-     axisY: {
-     labelFontSize: 14,
-     title: "Temperature(Â°C) "
-     },
-     toolTip: {
-     borderThickness: 0,
-     cornerRadius: 0
-     },
-     data: [
-     {
-     type: "spline", //change type to bar, line, area, pie, etc
-     dataPoints: [
-     {x: 50, y: 14},
-     {x: 40, y: 18},
-     {x: 30, y: 07},
-     {x: 20, y: -1},
-     {x: 10, y: 15},
-     {x: 00, y: 13},
-     {x: -10, y: 4}
-     ]
-     }
-     ]
-     }), 'lastTime': -10});
-     c1.push({'chart': new CanvasJS.Chart("light-chart-0", {
-     animationEnabled: true,
-     backgroundColor: "transparent",
-     theme: "theme1",
-     axisX: {
-     labelFontSize: 14,
-     title: "Minutes"
-
-     },
-     axisY: {
-     labelFontSize: 14,
-     title: "Temperature(Â°C) "
-     },
-     toolTip: {
-     borderThickness: 0,
-     cornerRadius: 0
-     },
-     data: [
-     {
-     type: "spline", //change type to bar, line, area, pie, etc
-     dataPoints: [
-     {x: 50, y: 14},
-     {x: 40, y: 18},
-     {x: 30, y: 07},
-     {x: 20, y: -1},
-     {x: 10, y: 15},
-     {x: 00, y: 13},
-     {x: -10, y: 4}
-     ]
-     }
-     ]
-     }), 'lastTime': -10});
-
-     charts.push(c1);
-     c1 = [];
-
-     charts[0][0]['chart'].render();
-     charts[0][1]['chart'].render();
-     */
 });
