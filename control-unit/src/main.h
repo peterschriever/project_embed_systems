@@ -8,7 +8,17 @@
 
 #define low(x)   ((x) & 0xFF)
 #define high(x)   (((x)>>8) & 0xFF)
+#define ROLLED_UP 0x01
+#define ROLLED_DOWN 0x00
+#define RED_LED (1 << PB0)
+#define YELLOW_LED (1 << PB1)
+#define GREEN_LED (1 << PB2)
+// take the average from 50 sensor samples
+#define COUNT_SAMPLES_AVG 50
+#define MODE_LIGHT 0x01
+#define MODE_TEMPERATURE 0x00
 
+void checkLimits();
 void testUART();
 void checkTemperature();
 void checkLight();
@@ -18,4 +28,6 @@ void changeState(uint8_t upOrDown);
 void initMotorSimTimer();
 void init_PORTB();
 void setLeds(uint8_t ledPins);
-uint16_t getTemperature();
+void takeSensorSamples();
+uint8_t getTemperature();
+uint16_t getLightLevel();
