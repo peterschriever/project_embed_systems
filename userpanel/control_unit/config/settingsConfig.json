@@ -1,7 +1,7 @@
 {
     "default": {
         "distMin": "5",
-        "distMax": "160",
+        "distMax": "200",
         "temp": "1",
         "light": "1"
     },

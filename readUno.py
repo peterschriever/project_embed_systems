@@ -1,7 +1,7 @@
 import time
 import serial as s
 
-ser = s.Serial('/dev/ttyACM0', 19200)
+ser = s.Serial('/dev/ttyACM1', 19200)
 time.sleep(1)
 
 # read one byte and use ord to make it an int
@@ -35,13 +35,13 @@ for i in range(0, 500):
     # temp -= 500
     # temp /= 10
     # print(temp)
-    firstResponse = hex(ord(ser.read(1)))
-    # if firstResponse == "0x30":
+    response = hex(ord(ser.read(1)))
+    # if response == "0x30":
     #     # vind response code in json file
     #     # if collectMore ->
     #     # doe loop tot collectMore klaar is
     #     print("received 0x30!~")
-    print("firstResponse: ", firstResponse)
+    print("response: ", response)
 
 
 ser.close()

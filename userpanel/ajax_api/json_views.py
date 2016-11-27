@@ -70,14 +70,15 @@ def setDeviceSettings(request):
     default = minmaxSet['default']
 
     deviceID = request.POST.get('deviceID')
-    newsettings['temp'] = request.POST.get('temp', default['temp'])
-    newsettings['distMax'] = request.POST.get('distMax', default['distMax'])
-    newsettings['distMin'] = request.POST.get('distMin', default['distMin'])
-    newsettings['light'] = request.POST.get('light', default['light'])
+    newsettings = {}
+    newsettings['temp'] = int(request.POST.get('temp', default['temp']))
+    newsettings['distMax'] = int(request.POST.get('distMax', default['distMax']))
+    newsettings['distMin'] = int(request.POST.get('distMin', default['distMin']))
+    newsettings['light'] = int(request.POST.get('light', default['light']))
 
     #check all new settings
     for setting in newsettings:
-        if((newsettings[setting] > MAXSET[setting]) or (newsettings[setting] < MINSET[setting])):
+        if((newsettings[setting] > int(MAXSET[setting])) or (newsettings[setting] < int(MINSET[setting]))):
             #invalid setting, throw error
             return buildErrorResponse({'error_msg':'Setting "' + setting + '" must be between "' + MINSET[setting] + '" and "' + MAXSET[setting] + '".', \
                                       'extra':{'newsettings':newsettings, 'minmaxSet':minmaxSet}})
@@ -92,27 +93,30 @@ def setDeviceSettings(request):
 
 
     #get current settings from cache
-    dict = readFromCache(cacheDir + 'deviceSettings.json', 'dict')
-
+    cacheSettings = readFromCache(cacheDir + 'deviceSettings.json', 'dict')
 
     #change ALL devices' settings, if deviceID == None (NULL);
     #otherwise only change 1 device's setting
     counter = 0
-    for device in dict:
+
+    deviceports = scanPorts('ports') #to force update on connected devices cache
+
+    print("deviceID", deviceID)
+    for device in cacheSettings:
         if((deviceID == None) or (deviceID == device)):
             #save settings to device:
-            if(sendCommandToDevice(dict[device]['port'], 'setSettings', newsettings)):
+            if(sendCommandToDevice(deviceports[device], 'setSettings', newsettings)):
                 counter += 1
                 #update the cached dictionary
-                dict[device] = newsettings
+                cacheSettings[device] = newsettings
             else:
                 #something went wrong
                 return buildErrorResponse({'error_msg':'something went wrong while trying to send new settings to the device..', \
-                                          'extra':{'msg':'applied settings to ' + counter + ' devices', 'counter':counter}})
-    writeToCache(cacheDir + 'deviceSettings.json', dict)
+                                          'extra':{'msg':'applied settings to ' + str(counter) + ' devices', 'counter':str(counter)}})
+    writeToCache(cacheDir + 'deviceSettings.json', cacheSettings)
 
     #all done now
-    return buildResponse({'msg':'applied settings to ' + counter + ' devices', 'counter':counter})
+    return buildResponse({'msg':'applied settings to ' + str(counter) + ' devices', 'counter':str(counter)})
 
 def getGraphUpdate(request):
     deviceports = scanPorts('ports') #to force update on connected devices cache
@@ -125,7 +129,7 @@ def getGraphUpdate(request):
     newSensordata = sensordata
 
     if(deviceports == {}):
-        return buildErrorResponse({'error_msg':'aaaaaaaaaaaaaaaargh'})
+        return buildErrorResponse({'error_msg':'No devices found.'})
 
     for dev, port in deviceports.items():
         if(deviceID == None or deviceID == dev):
@@ -148,8 +152,45 @@ def getGraphUpdate(request):
     return buildResponse({'data':returndata})
 
 def getWindowblindState(request):
+    deviceports = scanPorts('ports') #to force update on connected devices cache
+    deviceID = request.POST.get('deviceID')
+    if(deviceID == ""):
+        deviceID = None
 
-    return buildErrorResponse({'error_msg':'this function is not yet fully supported by the API', 'errorcode':'111111'})
+    if(deviceports == {}):
+        return buildErrorResponse({'error_msg':'No devices found.'})
+
+    returndata = {}
+    for dev, port in deviceports.items():
+        if(deviceID == None or deviceID == dev):
+            currentState = sendCommandToDevice(port, 'getCurrentState')
+            if(currentState == None):
+                return buildErrorResponse({'error_msg':'failed to retrieve sensor values from device'})
+            else:
+                returndata[dev] = int(hex(currentState), 0)
+
+    print("preventSerializableError!?", returndata)
+    return buildResponse({'data':returndata})
+    # return buildErrorResponse({'error_msg':'this function is not yet fully supported by the API', 'errorcode':'111111'})
 
 def setWindowblindState(request):
-    return buildErrorResponse({'error_msg':'this function is not yet fully supported by the API', 'errorcode':'111111'})
+    deviceports = scanPorts('ports') #to force update on connected devices cache
+    deviceID = request.POST.get('deviceID')
+    if(deviceID == ""):
+        deviceID = None
+
+    if(deviceports == {}):
+        return buildErrorResponse({'error_msg':'No devices found.'})
+
+    returndata = {}
+    for dev, port in deviceports.items():
+        if(deviceID == None or deviceID == dev):
+            # check what state to set
+            if (request.POST.get('state') == 1):
+                returndata['response'] = sendCommandToDevice(port, 'setStateRollUp')
+            else:
+                returndata['response'] = sendCommandToDevice(port, 'setStateRollDown')
+            returndata['response'] = hex(returndata['response'])
+
+    return buildResponse({'data':returndata})
+    # return buildErrorResponse({'error_msg':'this function is not yet fully supported by the API', 'errorcode':'111111'})

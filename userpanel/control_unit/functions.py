@@ -48,12 +48,15 @@ def writeToCache(location, data):
             return False
 
 def readByte(ser):
-    return ord(ser.read(1));
+    byte = ord(ser.read(1))
+    ser.close()
+    return byte
 
 def readDoubleByte(ser):
     firstByte = (ord(ser.read(1)) << 8)
     secondByte = ord(ser.read(1))
     print("doubleByte", firstByte + secondByte)
+    ser.close()
     return firstByte + secondByte
 
 #reads @length@ from @device@; where @device@ is either port or serial
@@ -71,7 +74,9 @@ def readFromDevice(device, length = 8):
     elif(isinstance(length, int) and (length > 1) and (length < settings._CACHING_PERIOD)):
         #init serial connection
         ser = serial.Serial(port, 19200)
-        return ser.read(length)
+        contents = ser.read(length)
+        ser.close()
+        return contents
     else:
         #if not a number, or not between 1 and 100, then don't try reading
         return None
@@ -92,6 +97,7 @@ def writeToDevice(device, data):
         #init serial connection
         ser = serial.Serial(port, 19200)
         ser.write([data])
+        ser.close()
         return True #done
 
 def sendCommandToDevice(port, command, extra = None):

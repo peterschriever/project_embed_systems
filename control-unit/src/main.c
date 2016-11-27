@@ -208,6 +208,11 @@ ISR(USART_RX_vect)
       uart_putByte(0x31);
       uart_putByte(_state);
       break;
+    case 0x57:
+      // getSensorMode
+      uart_putByte(0x31);
+      uart_putByte(_mode);
+      break;
     case 0x60:
       // setTemperatureLimit
       collectMore = 1;

@@ -109,6 +109,12 @@
         "tag": "getCurrentState"
     },
     {
+        "byteCode": "0x57",
+        "title": "Get the control unit sensor mode",
+        "tag": "getSensorMode",
+        "sendMore": 0
+    },
+    {
         "byteCode": "0x60",
         "title": "Set temperature limit",
         "tag": "setTemperatureLimit",
@@ -142,6 +148,18 @@
         "byteCode": "0x65",
         "title": "Manually set state to roll up",
         "tag": "setStateRollUp",
+        "sendMore": 0
+    },
+    {
+        "byteCode": "0x66",
+        "title": "Set the control unit in temperature mode",
+        "tag": "setModeTemperature",
+        "sendMore": 0
+    },
+    {
+        "byteCode": "0x67",
+        "title": "Set the control unit in light mode",
+        "tag": "setModeLight",
         "sendMore": 0
     }
 ]
