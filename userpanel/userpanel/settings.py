@@ -15,7 +15,13 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Choose wether we will use the json caching system at all
+# This may reduce the amount of requests to the control units.
+# WARNING: cache is experimental and not fully implemented
+_USE_CACHE = False
+
 # The period to cache sensordata in json format in ms
+# WARNING: cache is experimental and not fully implemented
 _CACHING_PERIOD = 0
 
 # Quick-start development settings - unsuitable for production

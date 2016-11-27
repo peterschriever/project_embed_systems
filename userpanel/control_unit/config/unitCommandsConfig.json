@@ -53,27 +53,6 @@
         "tag": "_"
     },
     {
-        "byteCode": "0x35",
-        "title": "State is rolled down",
-        "response": "OK",
-        "collectMore": 0,
-        "tag": "_"
-    },
-    {
-        "byteCode": "0x36",
-        "title": "State is rolled up",
-        "response": "OK",
-        "collectMore": 0,
-        "tag": "_"
-    },
-    {
-        "byteCode": "0x37",
-        "title": "State is changing",
-        "response": "OK",
-        "collectMore": 0,
-        "tag": "_"
-    },
-    {
         "byteCode": "0x50",
         "title": "Get temperature limit",
         "tag": "getTemperatureLimit"

@@ -1,7 +1,7 @@
 import time
 import serial as s
 
-ser = s.Serial('/dev/ttyACM1', 19200)
+ser = s.Serial('/dev/ttyACM0', 19200)
 time.sleep(1)
 
 # read one byte and use ord to make it an int
@@ -28,6 +28,7 @@ def read_unknown():
         return "Light: "+str(read_double())
 
 # ser.read(20)
+ser.write([0x52])
 
 for i in range(0, 500):
     # temp = read_byte()
@@ -35,6 +36,7 @@ for i in range(0, 500):
     # temp -= 500
     # temp /= 10
     # print(temp)
+    time.sleep(0.1)
     response = hex(ord(ser.read(1)))
     # if response == "0x30":
     #     # vind response code in json file

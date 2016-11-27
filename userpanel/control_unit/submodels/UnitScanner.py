@@ -11,26 +11,45 @@ class UnitScanner:
         pass
 
     def getAllUnits():
-        UnitScanner.rescanPorts() # refresh cache?
-        jsonDevices = UnitScanner.readFromCache(UnitScanner.cacheDir + 'devices.json')
-        devicesData = json.loads(jsonDevices)
+        ports = UnitScanner.scanPorts('all') # refresh cache?
+        # print("ports", ports)
+        if len(ports) <= 0:
+            return list() # no devices connected
 
         controlUnits = []
-        for devKey in devicesData:
-            controlUnits.append(ControlUnit( port=devicesData[devKey]['port'],\
-                description=devicesData[devKey]['serial'], serial="buggyOnLinux?" ))
+        for dev in ports:
+            controlUnits.append(ControlUnit( port=dev[0],\
+                description=dev[2], serial=dev[1] ))
 
         return controlUnits
 
-    def rescanPorts():
-        UnitScanner.writeToCache(UnitScanner.cacheDir + 'devices.json', '{}')
-        ports = []
+    def getUnitBySerial(serial):
+        ports = UnitScanner.scanPorts('all') # refresh cache?
+        # print("ports", ports)
+        if len(ports) <= 0:
+            return list() # no devices connected
+
+        for dev in ports:
+            if dev[1] == serial:
+                return ControlUnit(port=dev[0], description=dev[2], serial=dev[1])
+
+        return 0 # device not found
+
+    def scanPorts(info = ""):
+        if(info == 'ports'):
+            ports = {}
+        else:
+            ports = []
         for device in serial.tools.list_ports.comports():
             if((device.description).find("Arduino Uno") != -1):
                 if(UnitScanner.isNewDevice(device)):
                     UnitScanner.initNewDevice(device)
-
-                ports.append((device.device, device.serial_number, device.description))
+                if(info == 'all'):
+                    ports.append([device.device, device.serial_number, device.description])
+                elif(info == 'ports'):
+                    ports[device.serial_number] = device.device
+                else:
+                    ports.append(device.device)
         return ports
 
     def isNewDevice(device): #device from scanPorts()
@@ -52,6 +71,7 @@ class UnitScanner:
                 'settingsInfo.json', 'dict')
             newSettingsCache = settingsCache.get(device.serial_number, default)
             UnitScanner.writeToCache(UnitScanner.cacheDir + 'settingsInfo.json', newSettingsCache)
+
         i = 0
         for dev in deviceCache:
             i += 1
@@ -59,9 +79,9 @@ class UnitScanner:
                 return #all done
 
         #add device to deviceCache
-        deviceCache[i] = {'port':device[0], \
-            'serial':device[1], \
-            'description':device[2]}
+        deviceCache[i] = {'port':device.device, \
+            'serial':device.serial_number, \
+            'description':device.description}
         UnitScanner.writeToCache(UnitScanner.cacheDir + 'devices.json', deviceCache)
         return #all done
 
@@ -73,7 +93,7 @@ class UnitScanner:
             else: #dict
                 return jsondata
 
-    def writeToCache(location, data, deprec=''):
+    def writeToCache(location, data):
         with open(location, 'w') as jsonfile:
             if(isinstance(data, str)):
                 jsonfile.write(str(data))

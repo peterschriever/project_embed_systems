@@ -22,7 +22,7 @@ uint8_t _tempAverage = 145;
 // ex: 500
 // min: 0
 // max: 1023
-uint16_t _lightLimit = 1000;
+uint16_t _lightLimit = 300;
 
 // This global variable is used to define the average current light level
 // Throughout running the program, this value will change based on the
@@ -248,23 +248,23 @@ ISR(USART_RX_vect)
       break;
     case 0x64:
       // setStateRollDown
-      changeState(0);
       uart_putByte(0x30);
+      changeState(0);
       break;
     case 0x65:
       // setStateRollUp
-      changeState(1);
       uart_putByte(0x30);
+      changeState(1);
       break;
     case 0x66:
       // setModeTemperature
-      _mode = MODE_TEMPERATURE;
       uart_putByte(0x30);
+      _mode = MODE_TEMPERATURE;
       break;
     case 0x67:
       // setModeLight
-      _mode = MODE_LIGHT;
       uart_putByte(0x30);
+      _mode = MODE_LIGHT;
       break;
     case 0xFF:
       // @NOTE DEBUG: setLeds manual test

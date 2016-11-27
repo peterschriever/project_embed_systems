@@ -216,7 +216,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x0000000000000000      0x590
+.text           0x0000000000000000      0x5bc
  *(.vectors)
  .vectors       0x0000000000000000       0x68 /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/crtm328p.o
                 0x0000000000000000                __vectors
@@ -345,28 +345,28 @@ END GROUP
                 0x0000000000000352       0x56 main.o
                 0x0000000000000352                takeSensorSamples
  .text.__vector_18
-                0x00000000000003a8      0x16c main.o
+                0x00000000000003a8      0x198 main.o
                 0x00000000000003a8                __vector_18
  .text.uart_init
-                0x0000000000000514       0x22 UART.o
-                0x0000000000000514                uart_init
+                0x0000000000000540       0x22 UART.o
+                0x0000000000000540                uart_init
  .text.uart_getByte
-                0x0000000000000536        0xe UART.o
-                0x0000000000000536                uart_getByte
+                0x0000000000000562        0xe UART.o
+                0x0000000000000562                uart_getByte
  .text.uart_putByte
-                0x0000000000000544        0xe UART.o
-                0x0000000000000544                uart_putByte
+                0x0000000000000570        0xe UART.o
+                0x0000000000000570                uart_putByte
  .text.uart_putTwoBytes
-                0x0000000000000552       0x12 UART.o
-                0x0000000000000552                uart_putTwoBytes
+                0x000000000000057e       0x12 UART.o
+                0x000000000000057e                uart_putTwoBytes
  .text.libgcc.div
-                0x0000000000000564       0x28 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_udivmodhi4.o)
-                0x0000000000000564                __udivmodhi4
-                0x000000000000058c                . = ALIGN (0x2)
+                0x0000000000000590       0x28 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_udivmodhi4.o)
+                0x0000000000000590                __udivmodhi4
+                0x00000000000005b8                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x000000000000058c        0x0 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
-                0x000000000000058c                exit
-                0x000000000000058c                _exit
+ .fini9         0x00000000000005b8        0x0 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
+                0x00000000000005b8                exit
+                0x00000000000005b8                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -385,11 +385,11 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x000000000000058c        0x4 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
+ .fini0         0x00000000000005b8        0x4 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
  *(.fini0)
-                0x0000000000000590                _etext = .
+                0x00000000000005bc                _etext = .
 
-.data           0x0000000000800100        0xa load address 0x0000000000000590
+.data           0x0000000000800100        0xa load address 0x00000000000005bc
                 0x0000000000800100                PROVIDE (__data_start, .)
  *(.data)
  .data          0x0000000000800100        0x0 /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/crtm328p.o
@@ -440,8 +440,8 @@ END GROUP
  COMMON         0x000000000080010a       0x23 AVR_TTC_scheduler.o
                 0x000000000080010a                SCH_tasks_G
                 0x000000000080012d                PROVIDE (__bss_end, .)
-                0x0000000000000590                __data_load_start = LOADADDR (.data)
-                0x000000000000059a                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x00000000000005bc                __data_load_start = LOADADDR (.data)
+                0x00000000000005c6                __data_load_end = (__data_load_start + SIZEOF (.data))
 
 .noinit         0x000000000080012d        0x0
                 0x000000000080012d                PROVIDE (__noinit_start, .)
@@ -469,7 +469,7 @@ END GROUP
 .user_signatures
  *(.user_signatures*)
 
-.stab           0x0000000000000000     0x1e48
+.stab           0x0000000000000000     0x1eb4
  *(.stab)
  .stab          0x0000000000000000      0x474 lightSensor.o
                                         0x540 (size before relaxing)
@@ -477,9 +477,9 @@ END GROUP
                                         0x5c4 (size before relaxing)
  .stab          0x000000000000087c      0x6a8 AVR_TTC_scheduler.o
                                         0x864 (size before relaxing)
- .stab          0x0000000000000f24      0xa80 main.o
-                                        0xd20 (size before relaxing)
- .stab          0x00000000000019a4      0x4a4 UART.o
+ .stab          0x0000000000000f24      0xaec main.o
+                                        0xd8c (size before relaxing)
+ .stab          0x0000000000001a10      0x4a4 UART.o
                                         0x75c (size before relaxing)
 
 .stabstr        0x0000000000000000     0x1242
