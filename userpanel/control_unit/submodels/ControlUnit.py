@@ -23,7 +23,7 @@ class ControlUnit:
         try:
             ser = serial.Serial(self.port, ControlUnit.BAUD_RATE)
 
-            time.sleep(2) # wait until the serial connection is synced
+            time.sleep(3) # wait until the serial connection is synced
 
             for unitCmd in unitCmds:
                 # print("unitCmd.byteCode", unitCmd.byteCode)
@@ -72,10 +72,10 @@ class ControlUnit:
         try:
             ser = serial.Serial(self.port, ControlUnit.BAUD_RATE)
 
-            time.sleep(2) # wait until the serial connection is synced
+            time.sleep(3) # wait until the serial connection is synced
 
             for unitCmd in unitCmds:
-                # print("unitCmd.byteCode", unitCmd.byteCode)
+                print("unitCmd.byteCode", unitCmd.byteCode)
                 ser.write([unitCmd.byteCode])
                 responseByteCode = hex(ord(ser.read(1))) # read responseByteCode
                 responseCmd = CommandIdentifier.getResponse(responseByteCode)

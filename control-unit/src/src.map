@@ -216,7 +216,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x0000000000000000      0x5bc
+.text           0x0000000000000000      0x5b0
  *(.vectors)
  .vectors       0x0000000000000000       0x68 /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/crtm328p.o
                 0x0000000000000000                __vectors
@@ -329,44 +329,46 @@ END GROUP
  .text.blinkYellowLed
                 0x000000000000027a       0x36 main.o
                 0x000000000000027a                blinkYellowLed
+ .text.changeState.part.0
+                0x00000000000002b0       0x12 main.o
  .text.changeState
-                0x00000000000002b0       0x3e main.o
-                0x00000000000002b0                changeState
+                0x00000000000002c2       0x16 main.o
+                0x00000000000002c2                changeState
  .text.checkLimits
-                0x00000000000002ee       0x56 main.o
-                0x00000000000002ee                checkLimits
+                0x00000000000002d8       0x56 main.o
+                0x00000000000002d8                checkLimits
  .text.getTemperature
-                0x0000000000000344        0x8 main.o
-                0x0000000000000344                getTemperature
+                0x000000000000032e        0x8 main.o
+                0x000000000000032e                getTemperature
  .text.getLightLevel
-                0x000000000000034c        0x6 main.o
-                0x000000000000034c                getLightLevel
+                0x0000000000000336        0x6 main.o
+                0x0000000000000336                getLightLevel
  .text.takeSensorSamples
-                0x0000000000000352       0x56 main.o
-                0x0000000000000352                takeSensorSamples
+                0x000000000000033c       0x56 main.o
+                0x000000000000033c                takeSensorSamples
  .text.__vector_18
-                0x00000000000003a8      0x198 main.o
-                0x00000000000003a8                __vector_18
+                0x0000000000000392      0x1a2 main.o
+                0x0000000000000392                __vector_18
  .text.uart_init
-                0x0000000000000540       0x22 UART.o
-                0x0000000000000540                uart_init
+                0x0000000000000534       0x22 UART.o
+                0x0000000000000534                uart_init
  .text.uart_getByte
-                0x0000000000000562        0xe UART.o
-                0x0000000000000562                uart_getByte
+                0x0000000000000556        0xe UART.o
+                0x0000000000000556                uart_getByte
  .text.uart_putByte
-                0x0000000000000570        0xe UART.o
-                0x0000000000000570                uart_putByte
+                0x0000000000000564        0xe UART.o
+                0x0000000000000564                uart_putByte
  .text.uart_putTwoBytes
-                0x000000000000057e       0x12 UART.o
-                0x000000000000057e                uart_putTwoBytes
+                0x0000000000000572       0x12 UART.o
+                0x0000000000000572                uart_putTwoBytes
  .text.libgcc.div
-                0x0000000000000590       0x28 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_udivmodhi4.o)
-                0x0000000000000590                __udivmodhi4
-                0x00000000000005b8                . = ALIGN (0x2)
+                0x0000000000000584       0x28 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_udivmodhi4.o)
+                0x0000000000000584                __udivmodhi4
+                0x00000000000005ac                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00000000000005b8        0x0 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
-                0x00000000000005b8                exit
-                0x00000000000005b8                _exit
+ .fini9         0x00000000000005ac        0x0 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
+                0x00000000000005ac                exit
+                0x00000000000005ac                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -385,11 +387,11 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00000000000005b8        0x4 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
+ .fini0         0x00000000000005ac        0x4 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_exit.o)
  *(.fini0)
-                0x00000000000005bc                _etext = .
+                0x00000000000005b0                _etext = .
 
-.data           0x0000000000800100        0xa load address 0x00000000000005bc
+.data           0x0000000000800100        0x8 load address 0x00000000000005b0
                 0x0000000000800100                PROVIDE (__data_start, .)
  *(.data)
  .data          0x0000000000800100        0x0 /usr/lib/gcc/avr/4.8.1/../../../avr/lib/avr5/crtm328p.o
@@ -403,52 +405,53 @@ END GROUP
  .data          0x0000000000800100        0x0 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_copy_data.o)
  .data          0x0000000000800100        0x0 /usr/lib/gcc/avr/4.8.1/avr5/libgcc.a(_clear_bss.o)
  *(.data*)
- .data._state   0x0000000000800100        0x1 main.o
-                0x0000000000800100                _state
  .data._minRollDown
-                0x0000000000800101        0x1 main.o
-                0x0000000000800101                _minRollDown
+                0x0000000000800100        0x1 main.o
+                0x0000000000800100                _minRollDown
  .data._maxRollDown
-                0x0000000000800102        0x1 main.o
-                0x0000000000800102                _maxRollDown
- .data._lightAverage
-                0x0000000000800103        0x2 main.o
-                0x0000000000800103                _lightAverage
+                0x0000000000800101        0x1 main.o
+                0x0000000000800101                _maxRollDown
  .data._lightLimit
-                0x0000000000800105        0x2 main.o
-                0x0000000000800105                _lightLimit
+                0x0000000000800102        0x2 main.o
+                0x0000000000800102                _lightLimit
  .data._tempAverage
-                0x0000000000800107        0x1 main.o
-                0x0000000000800107                _tempAverage
+                0x0000000000800104        0x1 main.o
+                0x0000000000800104                _tempAverage
  .data._temperatureLimit
-                0x0000000000800108        0x1 main.o
-                0x0000000000800108                _temperatureLimit
- .data._mode    0x0000000000800109        0x1 main.o
-                0x0000000000800109                _mode
+                0x0000000000800105        0x1 main.o
+                0x0000000000800105                _temperatureLimit
+ .data._mode    0x0000000000800106        0x1 main.o
+                0x0000000000800106                _mode
  *(.rodata)
  *(.rodata*)
  *(.gnu.linkonce.d*)
-                0x000000000080010a                . = ALIGN (0x2)
-                0x000000000080010a                _edata = .
-                0x000000000080010a                PROVIDE (__data_end, .)
+                0x0000000000800108                . = ALIGN (0x2)
+ *fill*         0x0000000000800107        0x1 
+                0x0000000000800108                _edata = .
+                0x0000000000800108                PROVIDE (__data_end, .)
 
-.bss            0x000000000080010a       0x23
-                0x000000000080010a                PROVIDE (__bss_start, .)
+.bss            0x0000000000800108       0x26
+                0x0000000000800108                PROVIDE (__bss_start, .)
  *(.bss)
  *(.bss*)
+ .bss._state    0x0000000000800108        0x1 main.o
+                0x0000000000800108                _state
+ .bss._lightAverage
+                0x0000000000800109        0x2 main.o
+                0x0000000000800109                _lightAverage
  *(COMMON)
- COMMON         0x000000000080010a       0x23 AVR_TTC_scheduler.o
-                0x000000000080010a                SCH_tasks_G
-                0x000000000080012d                PROVIDE (__bss_end, .)
-                0x00000000000005bc                __data_load_start = LOADADDR (.data)
-                0x00000000000005c6                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x000000000080010b       0x23 AVR_TTC_scheduler.o
+                0x000000000080010b                SCH_tasks_G
+                0x000000000080012e                PROVIDE (__bss_end, .)
+                0x00000000000005b0                __data_load_start = LOADADDR (.data)
+                0x00000000000005b8                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x000000000080012d        0x0
-                0x000000000080012d                PROVIDE (__noinit_start, .)
+.noinit         0x000000000080012e        0x0
+                0x000000000080012e                PROVIDE (__noinit_start, .)
  *(.noinit*)
-                0x000000000080012d                PROVIDE (__noinit_end, .)
-                0x000000000080012d                _end = .
-                0x000000000080012d                PROVIDE (__heap_start, .)
+                0x000000000080012e                PROVIDE (__noinit_end, .)
+                0x000000000080012e                _end = .
+                0x000000000080012e                PROVIDE (__heap_start, .)
 
 .eeprom         0x0000000000810000        0x0
  *(.eeprom*)
@@ -469,7 +472,7 @@ END GROUP
 .user_signatures
  *(.user_signatures*)
 
-.stab           0x0000000000000000     0x1eb4
+.stab           0x0000000000000000     0x1ee4
  *(.stab)
  .stab          0x0000000000000000      0x474 lightSensor.o
                                         0x540 (size before relaxing)
@@ -477,14 +480,14 @@ END GROUP
                                         0x5c4 (size before relaxing)
  .stab          0x000000000000087c      0x6a8 AVR_TTC_scheduler.o
                                         0x864 (size before relaxing)
- .stab          0x0000000000000f24      0xaec main.o
-                                        0xd8c (size before relaxing)
- .stab          0x0000000000001a10      0x4a4 UART.o
+ .stab          0x0000000000000f24      0xb1c main.o
+                                        0xdbc (size before relaxing)
+ .stab          0x0000000000001a40      0x4a4 UART.o
                                         0x75c (size before relaxing)
 
-.stabstr        0x0000000000000000     0x1242
+.stabstr        0x0000000000000000     0x125d
  *(.stabstr)
- .stabstr       0x0000000000000000     0x1242 lightSensor.o
+ .stabstr       0x0000000000000000     0x125d lightSensor.o
 
 .stab.excl
  *(.stab.excl)

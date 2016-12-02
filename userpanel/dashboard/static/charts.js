@@ -3,6 +3,9 @@ var devices = [];
 var deviceCount = -1;
 var alertedBefore = false;
 var conDevTimer;
+var automaticUpdatesPaused = false;
+var _changeStateNextIter = false;
+var _csDevID = false;
 
 var API_URI = '/api/v1/';
 
@@ -37,109 +40,76 @@ function updateDataPoint(device, chart, datapoint, pos) {
 }
 
 function toggleBlind(devID) {
-  devID = typeof devID == 'undefined' ? null : devID;
-  setTimeout(function() {
-    currentState = getUnitCurrentState(devID);
-    console.log(currentState);
-    state = (currentState == 0 ? 1 : 0 );
-
-    $.post("/api/v1/set-windowblind-state", {'deviceID': devID, 'state':state}, function (data) {
-      if (data.error) {
-        if (data.errorcode === '111111') {
-          //not (yet) supported function
-          if (!alertedBefore) {
-            alert(data.error_msg);
-            alertedBefore = true;
-          }
-        } else {
-          alert(data.error_msg);
-        }
-        console.log('ERROR - getUnitCurrentState(): ' + data.error_msg);
-      } else {
-        var devID;
-        console.log(data.data);
-        // TODO: change HTML
-        // $.each(data.state, function (key, val) {
-        //     devID = $.inArray(key, devices);
-        //     var htmlstring;
-        //     switch (val) {
-        //         case '00'://rolled down
-        //             htmlstring = "<strong> Status: </strong> <i class=\"fa fa-square\"></i> Rolled down <br />";
-        //             break;
-        //         case '01'://rolled up
-        //             htmlstring = "<strong> Status: </strong> <i class=\"fa fa-square-o\"></i> Rolled up <br />";
-        //             break;
-        //         case '10'://rolling down
-        //             htmlstring = "<strong> Status: </strong> <i class=\"fa fa-angle-double-down\"></i> Rolling down <br />";
-        //             break;
-        //         case '11'://rolling up
-        //             htmlstring = "<strong> Status: </strong> <i class=\"fa fa-angle-double-up\"></i> rolling up <br />";
-        //             break;
-        //     }
-        //     $("#dev-" + devID + "-status-blind").html(htmlstring);
-        // });
-      }
-    }, "json");
-  }, 1000);
+  devID = devices[devID];
+  currentState = $("#dev-" + devID + "-status-blind").data("state");
+  if (currentState) {
+    // 1: rolled down
+    _changeStateNextIter = "up";
+    _csDevID = devID;
+  } else {
+    // 0: rolled up
+    _changeStateNextIter = "down";
+    _csDevID = devID;
+  }
 }
 
 function initNewDevice(devID) {
-    var htmlcode = "";
+    var htmlCode = "";
     {
-        htmlcode += "<div id=\"device-" + devID + "\" class=\"rolldown\">";
-        htmlcode += "    <div class=\"panel-status-details col-sm-12\">";
-        htmlcode += "       <a href=\"#toggle-view\" onclick=\"$('#rollout" + devID + "').toggle();\">";
-        htmlcode += "           <h3>Control unit ID: " + devID + "</h3></a>";
-        htmlcode += "       <div id=\"rollout" + devID + "\">";
-        htmlcode += "           <div id=\"dev-" + devID + "-manualControl\">";
-        htmlcode += "               <a href=\"#toggleWindowBlind\" onclick=\"toggleBlind(" + devID + ");\" class=\"btn btn-default\">";
-        htmlcode += "                   Roll down <i class=\"fa fa-angle-down\"></i>";
-        htmlcode += "               </a>";
-        htmlcode += "           </div>";
-        htmlcode += "           <div id=\"dev-" + devID + "-status\">";
-        htmlcode += "               <div id=\"dev-" + devID + "-status-blind\"><strong> Status: </strong> <i class=\"fa fa-square-o\"></i> Loading data.. <br /></div>";
-        // htmlcode += "               <div id=\"dev-" + devID + "-status-temp\"><strong> Current temperature: </strong> ?°C <br /></div>";
-        // htmlcode += "               <div id=\"dev-" + devID + "-status-light\"><strong> Current light intensity: </strong> ? <br /></div>";
-        htmlcode += "           </div>";
-        htmlcode += "           <div id=\"dev-" + devID + "-charts\" class=\"panel-status-charts\">";
-        htmlcode += "               <!-- CHARTS -->";
-        htmlcode += "               <div class=\"col-sm-6\">";
-        htmlcode += "                   <div class=\"container\">";
-        htmlcode += "                        <div class=\"row m-b-1\">";
-        htmlcode += "                           <div class=\"col-xs-6\">";
-        htmlcode += "                               <div class=\"card shadow\">";
-        htmlcode += "                                   <h4 class=\"card-header\">Temperature</h4>";
-        htmlcode += "                                   <div class=\"card-block\">";
-        htmlcode += "                                        <div id=\"temp-chart-" + devID + "\"></div>";
-        htmlcode += "                                    </div>";
-        htmlcode += "                                </div>";
-        htmlcode += "                            </div>";
-        htmlcode += "                        </div>";
-        htmlcode += "                    </div>";
-        htmlcode += "                </div>";
-        htmlcode += "                <div class=\"col-sm-6\">";
-        htmlcode += "                    <div class=\"container\">";
-        htmlcode += "                        <div class=\"row m-b-1\">";
-        htmlcode += "                            <div class=\"col-xs-6\">";
-        htmlcode += "                                <div class=\"card shadow\">";
-        htmlcode += "                                    <h4 class=\"card-header\">Light intensity</h4>";
-        htmlcode += "                                    <div class=\"card-block\">";
-        htmlcode += "                                        <div id=\"light-chart-" + devID + "\"></div>";
-        htmlcode += "                                    </div>";
-        htmlcode += "                                </div>";
-        htmlcode += "                            </div>";
-        htmlcode += "                        </div>";
-        htmlcode += "                    </div>";
-        htmlcode += "                </div>";
-        htmlcode += "                <!-- /CHARTS -->";
-        htmlcode += "            </div>";
-        htmlcode += "        </div>";
-        htmlcode += "    </div>";
-        htmlcode += "    <br />";
-        htmlcode += "    <hr />";
-        htmlcode += "</div>";
+        htmlCode += "<div id=\"device-" + devID + "\" class=\"rolldown\">";
+        htmlCode += "    <div class=\"panel-status-details col-sm-12\">";
+        htmlCode += "       <a href=\"#toggle-view\" onclick=\"$('#rollout" + devID + "').toggle();\">";
+        htmlCode += "           <h3>Control unit ID: " + devID + "</h3></a>";
+        htmlCode += "       <div id=\"rollout" + devID + "\">";
+        htmlCode += "           <div id=\"dev-" + devID + "-manualControl\">";
+        htmlCode += "               <button id=\"toggleWindowBlind\" disabled=\"disabled\" onclick=\"toggleBlind(" + devID + ");\" class=\"btn btn-default\">";
+        htmlCode += "                   Toggle blind status";
+        htmlCode += "               </button>";
+        htmlCode += "           </div>";
+        htmlCode += "           <div id=\"dev-" + devID + "-status\">";
+        htmlCode += "               <div id=\"dev-" + devID + "-status-blind\"><strong> Status: </strong> <i class=\"fa fa-square-o\"></i> Loading data.. <br /></div>";
+        // htmlCode += "               <div id=\"dev-" + devID + "-status-temp\"><strong> Current temperature: </strong> ?°C <br /></div>";
+        // htmlCode += "               <div id=\"dev-" + devID + "-status-light\"><strong> Current light intensity: </strong> ? <br /></div>";
+        htmlCode += "           </div>";
+        htmlCode += "           <div id=\"dev-" + devID + "-charts\" class=\"panel-status-charts\">";
+        htmlCode += "               <!-- CHARTS -->";
+        htmlCode += "               <div class=\"col-sm-6\">";
+        htmlCode += "                   <div class=\"container\">";
+        htmlCode += "                        <div class=\"row m-b-1\">";
+        htmlCode += "                           <div class=\"col-xs-6\">";
+        htmlCode += "                               <div class=\"card shadow\">";
+        htmlCode += "                                   <h4 class=\"card-header\">Temperature</h4>";
+        htmlCode += "                                   <div class=\"card-block\">";
+        htmlCode += "                                        <div id=\"temp-chart-" + devID + "\"></div>";
+        htmlCode += "                                    </div>";
+        htmlCode += "                                </div>";
+        htmlCode += "                            </div>";
+        htmlCode += "                        </div>";
+        htmlCode += "                    </div>";
+        htmlCode += "                </div>";
+        htmlCode += "                <div class=\"col-sm-6\">";
+        htmlCode += "                    <div class=\"container\">";
+        htmlCode += "                        <div class=\"row m-b-1\">";
+        htmlCode += "                            <div class=\"col-xs-6\">";
+        htmlCode += "                                <div class=\"card shadow\">";
+        htmlCode += "                                    <h4 class=\"card-header\">Light intensity</h4>";
+        htmlCode += "                                    <div class=\"card-block\">";
+        htmlCode += "                                        <div id=\"light-chart-" + devID + "\"></div>";
+        htmlCode += "                                    </div>";
+        htmlCode += "                                </div>";
+        htmlCode += "                            </div>";
+        htmlCode += "                        </div>";
+        htmlCode += "                    </div>";
+        htmlCode += "                </div>";
+        htmlCode += "                <!-- /CHARTS -->";
+        htmlCode += "            </div>";
+        htmlCode += "        </div>";
+        htmlCode += "    </div>";
+        htmlCode += "    <br />";
+        htmlCode += "    <hr />";
+        htmlCode += "</div>";
     }
-    $("#devices").append(htmlcode);
+    $("#devices").append(htmlCode);
     temp = [];
     temp.push({'chart': new CanvasJS.Chart("temp-chart-" + devID, {
             animationEnabled: true,
@@ -199,104 +169,96 @@ function initNewDevice(devID) {
     charts[devID][1]['chart'].render();
 }
 
-function getConnectedDevices() {
-    $.post("/api/v1/get-connected-devices", {}, function (data) {
-        if (data.error) {
-            if (data.errorcode === '111111') {
-                //not (yet) supported function
-                if (!alertedBefore) {
-                    alert(data.error_msg);
-                    alertedBefore = true;
-                }
-            } else {
-                alert(data.error_msg);
-            }
-            console.log('ERROR - getConnectedDevices(): ' + data.error_msg);
-        } else {
-            //update the count at top of the page
-            $('#control-unit-count').html("<strong>Connected automatic window blind control units: " + data.count + "</strong><br/>");
-            if (deviceCount === -1) {
-                //do nothing
-            } else if (deviceCount < data.count) {
-                alert('a device has been connected');
-            } else if (deviceCount > data.count) {
-                alert('a device has been disconnected');
-            }
-            deviceCount = data.count;
+function updateConnectedDevices(data) {
+  //update the count at top of the page
+  htmlCode = "";
+  htmlCode += "<strong>Connected automatic window blind control units: " + data.count + "</strong><br/>"
+  htmlCode += "<button id=\"toggleAutoUpdates\" onclick=\"toggleAutoUpdates();\" class=\"btn btn-default\">";
+  htmlCode += "  Disable automatic updates <i class=\"fa fa-pause\"></i>";
+  htmlCode += "</button>";
 
-            tempList = [];
-            $.each(data.info, function (key, val) {
-                tempList.push(val[1]);
-                if ($.inArray(val[1], devices) !== -1) {
-                    //exists
-                } else {
-                    devices.push(val[1]);
-                    initNewDevice(devices.length - 1);
-                }
-            });
-            $.each(devices, function (key, val) {
-                if ($.inArray(val, tempList) === -1) {
-                    devices = $.grep(devices, function (value) {
-                        return value !== val;
-                    });
-                    charts.pop();
-                    $("#device-" + devices.length).remove();
-                }
-            });
-        }
-    }, "json");
+  $('#control-unit-count').html(htmlCode);
+  if (deviceCount === -1) {
+      //do nothing
+  } else if (deviceCount < data.count) {
+      alert('a device has been connected');
+  } else if (deviceCount > data.count) {
+      alert('a device has been disconnected');
+  }
+  deviceCount = data.count;
+
+  tempList = [];
+  $.each(data.info, function (key, val) {
+      tempList.push(val[1]);
+      if ($.inArray(val[1], devices) !== -1) {
+          //exists
+      } else {
+          devices.push(val[1]);
+          initNewDevice(devices.length - 1);
+      }
+  });
+  $.each(devices, function (key, val) {
+      if ($.inArray(val, tempList) === -1) {
+          devices = $.grep(devices, function (value) {
+              return value !== val;
+          });
+          charts.pop();
+          $("#device-" + devices.length).remove();
+      }
+  });
+  console.log("connected devices updated")
+  console.log(devices)
 }
 
 function updateWindowBlindStates(statesData) {
-  console.log(statesData);
-  // $.each(statesData, function (key, val) {
-  //     devID = $.inArray(key, devices);
-  //     var htmlstring;
-  //     switch (val) {
-  //         case 0: // rolled down
-  //             htmlstring = "<strong> Status: </strong> <i class=\"fa fa-square\"></i> Rolled down <br />";
-  //             break;
-  //         case 1: // rolled up
-  //             htmlstring = "<strong> Status: </strong> <i class=\"fa fa-square-o\"></i> Rolled up <br />";
-  //             break;
-  //         case 2: // rolling down
-  //             htmlstring = "<strong> Status: </strong> <i class=\"fa fa-angle-double-down\"></i> Rolling down <br />";
-  //             break;
-  //         case 3: // rolling up
-  //             htmlstring = "<strong> Status: </strong> <i class=\"fa fa-angle-double-up\"></i> rolling up <br />";
-  //             break;
-  //     }
-  //     $("#dev-" + devID + "-status-blind").html(htmlstring);
-  // });
+  $.each(statesData, function (key, val) {
+      devID = $.inArray(key, devices);
+      var htmlstring;
+      switch (val['getCurrentState']) {
+          case 0: // rolled down
+              htmlstring = "<strong> Status: </strong> <i class=\"fa fa-square\"></i> Rolled up <br />";
+              break;
+          case 1: // rolled up
+              htmlstring = "<strong> Status: </strong> <i class=\"fa fa-square-o\"></i> Rolled down <br />";
+              break;
+          case 2: // rolling down
+              htmlstring = "<strong> Status: </strong> <i class=\"fa fa-angle-double-down\"></i> Rolling down <br />";
+              break;
+          case 3: // rolling up
+              htmlstring = "<strong> Status: </strong> <i class=\"fa fa-angle-double-up\"></i> rolling up <br />";
+              break;
+      }
+      $("#dev-" + devID + "-status-blind").html(htmlstring);
+      $("#dev-" + devID + "-status-blind").data("state", val['getCurrentState']);
+  });
 }
 
-function getGraphUpdates() {
-    $.post("/api/v1/get-graph-update", {'deviceID': null}, function (data) {
-        if (data.error) {
-            if (data.errorcode === '111111') {
-                //not (yet) supported function
-                if (!alertedBefore) {
-                    alert(data.error_msg);
-                    alertedBefore = true;
-                }
-            } else {
-                // alert(data.error_msg);
-            }
-            console.log('ERROR - getGraphUpdates(): ' + data.error_msg);
-        } else {
-            var devID;
-            $.each(data.data, function (key, val) {
-                devID = $.inArray(key, devices);
-                addDataPoint(devID, 0, val[0]);
-                addDataPoint(devID, 1, val[1]);
-            });
-        }
-    }, "json");
+function updateGraphs(data) {
+    var devID;
+    $.each(data, function (key, val) {
+        devID = $.inArray(key, devices);
+        addDataPoint(devID, 0, val['getTemperature']);
+        addDataPoint(devID, 1, val['getLightLevel']);
+    });
+}
+
+function toggleAutoUpdates() {
+  automaticUpdatesPaused = automaticUpdatesPaused ? false : true;
+
+  var toggleBlindsBtn = document.getElementById("toggleWindowBlind");
+  toggleBlindsBtn.disabled = toggleBlindsBtn.disabled ? false : true;
+
+  var toggleAutoUpdBtn = document.getElementById("toggleAutoUpdates");
+  enabledHtml = "Disable automatic updates <i class=\"fa fa-pause\"></i>";
+  disabledHtml = "Enable automatic updates <i class=\"fa fa-play\"></i>";
+
+  toggleAutoUpdBtn.innerHTML = toggleBlindsBtn.disabled ? enabledHtml : disabledHtml;
 }
 
 function queryAPI(apiCommand, args) {
-  resp = $.post(API_URI + apiCommand, {'args': args}, null, "json");
+  resp = $.post(API_URI + apiCommand, JSON.stringify({'args': args}), null, "json");
   resp.done(function(respData) {
+    console.log(respData)
     if (respData.error) {
       // show error
       alert(respData.error_msg);
@@ -307,6 +269,12 @@ function queryAPI(apiCommand, args) {
       case "get-windowblind-state":
         updateWindowBlindStates(respData.data);
         break;
+      case "get-connected-devices":
+        updateConnectedDevices(respData.data);
+        break;
+      case "get-graph-update":
+        updateGraphs(respData.data);
+        break;
       default:
         console.log(respData);
     }
@@ -316,22 +284,38 @@ function queryAPI(apiCommand, args) {
 
 // init javascript
 $(function () {
-    // add devices/charts
-    getConnectedDevices();
+  getUpdate = function() {
+    if(!automaticUpdatesPaused) {
+      queryAPI("get-connected-devices");
+      window.setTimeout(function() {queryAPI("get-windowblind-state")}, 100); //43
+      window.setTimeout(function() {queryAPI("get-graph-update")}, 4000); //25
+      if (_changeStateNextIter) {
+        window.setTimeout(function() {queryAPI("set-windowblind-state", {"setState": _changeStateNextIter, "deviceID": _csDevID})}, 6000);
+        _changeStateNextIter = false;
+      }
+    } else {
+      if (_changeStateNextIter) {
+        console.log({"setState": _changeStateNextIter, "deviceID": _csDevID});
+        queryAPI("set-windowblind-state", {"setState": _changeStateNextIter, "deviceID": _csDevID});
+        _changeStateNextIter = false;
+      }
+    }
+  }
+  getUpdate();
+  setInterval(getUpdate, 16000);
 
-    queryAPI("get-windowblind-state");
 
-    // poll for new devices every 2 seconds
-    // conDevTimer = window.setInterval(getConnectedDevices, 2000);
+  // poll for new devices every 2 seconds
+  // conDevTimer = window.setInterval(getConnectedDevices, 2000);
 
-    // get graph data
-    // getGraphUpdates();
+  // get graph data
+  // getGraphUpdates();
 
-    // poll every 60 (5) seconds
-    // window.setInterval(getGraphUpdates(), 60000);
-    // window.setInterval(getGraphUpdates, 5000);
+  // poll every 60 (5) seconds
+  // window.setInterval(getGraphUpdates(), 60000);
+  // window.setInterval(getGraphUpdates, 5000);
 
-    // poll the control units current states every 4s
-    // window.setInterval(getUnitCurrentState, 4000);
+  // poll the control units current states every 4s
+  // window.setInterval(getUnitCurrentState, 4000);
 
 });

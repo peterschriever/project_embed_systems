@@ -8,6 +8,7 @@
 
 #define low(x)   ((x) & 0xFF)
 #define high(x)   (((x)>>8) & 0xFF)
+// state is either ROLLED_UP or ROLLED_DOWN
 #define ROLLED_UP 0x01
 #define ROLLED_DOWN 0x00
 #define RED_LED (1 << PB0)

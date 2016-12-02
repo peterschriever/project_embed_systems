@@ -27,7 +27,7 @@ uint16_t _lightLimit = 300;
 // This global variable is used to define the average current light level
 // Throughout running the program, this value will change based on the
 // takeSensorSamples function and light sensor data
-uint16_t _lightAverage = 500;
+uint16_t _lightAverage = 0;
 
 // Factory max roll down limit in cms
 // ex: 160
@@ -44,7 +44,7 @@ uint8_t _minRollDown = 10;
 // First bit represents current state (0: rolled down, 1: rolled up)
 // Second bit represents movement (0: static, 1: moving)
 // rolled up, not moving ex: 0000 0001 (0x01)
-uint8_t _state = ROLLED_UP;
+uint8_t _state = ROLLED_DOWN;
 
 
 int main() {
@@ -56,8 +56,8 @@ int main() {
   SCH_Start();
 
   // sensor checks, 0.5s
-  SCH_Add_Task(checkLimits, 0, 500); // 5s: check state limits
-  SCH_Add_Task(takeSensorSamples, 0, 1000); // 10s: sample sensors for average
+  SCH_Add_Task(checkLimits, 0, 50); // 0.05s: check state limits
+  SCH_Add_Task(takeSensorSamples, 0, 10); // 0.01s: sample sensors for average
 
   sei();
   // Enable the USART Recieve Complete interrupt (USART_RXC)
@@ -138,16 +138,16 @@ void checkLimits() {
 
 void changeState(uint8_t toState) {
   if (toState == ROLLED_UP) {
-    _state = (_BV(0)|_BV(1)); // _state is moving and up
+    _state = ROLLED_UP; // _state is moving and up
     blinkYellowLed(); // blink yellow led to simulate motor
     setLeds(RED_LED); // set red led
   } else {
-    _state = _BV(1); // _state is moving and rolled down
+    _state = ROLLED_DOWN; // _state is moving and rolled down
     blinkYellowLed(); // blink yellow led to simulate motor
     setLeds(GREEN_LED); // set green led
   }
 
-  _state &= _BV(0); // state is now static / non changing
+  // _state &= _BV(0); // state is now static / non changing
 }
 
 // gets the temperature value
@@ -186,11 +186,13 @@ ISR(USART_RX_vect)
     case 0x52:
       // getTemperature
       uart_putByte(0x31);
+      takeSensorSamples();
       uart_putByte(_tempAverage);
       break;
     case 0x53:
       // getLightLevel
       uart_putByte(0x32);
+      takeSensorSamples();
       uart_putTwoBytes(_lightAverage);
       break;
     case 0x54:

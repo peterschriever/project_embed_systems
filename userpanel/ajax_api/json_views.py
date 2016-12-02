@@ -26,6 +26,7 @@ def buildResponse(dataDict, apiCommand, error = False):
         resp['errorcode'] = dataDict.get('errorcode', '000000')
         resp['error_msg'] = dataDict.get('error_msg', 'Unknown error')
         resp['extra'] = dataDict.get('extra', None)
+        resp['command'] = apiCommand
     else:
         resp['command'] = apiCommand
         resp['error'] = False
@@ -62,6 +63,7 @@ def getConnectedDevices(request):
 
 @csrf_exempt
 def getDeviceSettings(request):
+    time.sleep(2)
     if settings._USE_CACHE:
         devSettings = readFromCache(cacheDir + 'deviceSettings.json', 'dict')
     else:
@@ -92,8 +94,8 @@ def getDeviceSettings(request):
             }
 
     postDict = jsonPostToDict(request.body)
-    deviceID = postDict.get('deviceID')
-    print("deviceID", deviceID)
+    args = postDict.get('args')
+    deviceID = args['deviceID']
     if(deviceID == None):
         return buildResponse(devSettings, "get-device-settings")
     else:
@@ -106,12 +108,14 @@ def getDeviceSettings(request):
 
 @csrf_exempt
 def setDeviceSettings(request):
+    time.sleep(2)
     if settings._USE_CACHE:
         return buildErrorResponse({'error_msg':'Cache version of this cmd not implemented'}, \
                                   "set-device-settings")
 
     postDict = jsonPostToDict(request.body)
-    deviceID = postDict.get('deviceID')
+    args = postDict.get('args')
+    deviceID = args['deviceID']
     if deviceID == None:
         return buildErrorResponse({'error_msg':'Must supply a deviceID'}, "set-device-settings")
 
@@ -126,10 +130,10 @@ def setDeviceSettings(request):
 
     cmds = [setMaxDistCmd, setMinDistCmd, setLightLimitCmd, setTempLimitCmd]
     cmdsData = {
-        "setMinRollDown": postDict.get('minRolloutAmount'),
-        "setMaxRollDown": postDict.get('maxRolloutAmount'),
-        "setLightLimit": postDict.get('maxLightIntensity'),
-        "setTemperatureLimit": tempCToSensor(postDict.get('maxTemperature')),
+        "setMinRollDown": args['minRolloutAmount'],
+        "setMaxRollDown": args['maxRolloutAmount'],
+        "setLightLimit": args['maxLightIntensity'],
+        "setTemperatureLimit": tempCToSensor(args['maxTemperature']),
     }
     unitResponses = UnitCommunication.sendSetCommand(cmds, unit, cmdsData)
 
@@ -137,12 +141,14 @@ def setDeviceSettings(request):
 
 @csrf_exempt
 def getGraphUpdate(request):
+    time.sleep(2)
     units = UnitScanner.getAllUnits()
 
     getLightCmd = CommandIdentifier.getCommand('getLightLevel')
     getTempCmd = CommandIdentifier.getCommand('getTemperature')
     unitResponses = UnitCommunication.sendGetCommand([getLightCmd, getTempCmd], units)
 
+    print("unitResponses", unitResponses)
     # dont forget to adjust the temperature
     try:
         for unit in unitResponses:
@@ -154,6 +160,7 @@ def getGraphUpdate(request):
 
 @csrf_exempt
 def getWindowblindState(request):
+    time.sleep(2)
     postDict = jsonPostToDict(request.body)
     deviceID = postDict.get('deviceID')
     getStateCmd = CommandIdentifier.getCommand('getCurrentState')
@@ -161,21 +168,22 @@ def getWindowblindState(request):
         units = UnitScanner.getAllUnits()
     else:
         units = [UnitScanner.getUnitBySerial(deviceID)]
-
     unitResponses = UnitCommunication.sendGetCommand(getStateCmd, units)
-
+    print("unitResponses", unitResponses)
     return buildResponse(unitResponses, "get-windowblind-state")
 
 @csrf_exempt
 def setWindowblindState(request):
+    time.sleep(2)
     postDict = jsonPostToDict(request.body)
-    deviceID = postDict.get('deviceID')
+    args = postDict.get('args')
+    deviceID = args['deviceID']
     if deviceID == None:
         return buildErrorResponse({'error_msg':'DeviceID is required'}, "set-windowblind-state")
 
-    if postDict.get('setState') == 'up':
+    if args['setState'] == 'up':
         setStateCmd = CommandIdentifier.getCommand('setStateRollUp')
-    elif postDict.get('setState') == 'down':
+    elif args['setState'] == 'down':
         setStateCmd = CommandIdentifier.getCommand('setStateRollDown')
     else:
         return buildErrorResponse({'error_msg':'setState is required and should be either `up` or `down`'}, "set-windowblind-state")
@@ -187,6 +195,7 @@ def setWindowblindState(request):
 
 @csrf_exempt
 def setWindowBlindMode(request):
+    time.sleep(2)
     postDict = jsonPostToDict(request.body)
     deviceID = postDict.get('deviceID')
     if deviceID == None:

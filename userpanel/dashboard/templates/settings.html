@@ -15,14 +15,22 @@
                         </select>
                         <hr>
                         <div class="allSettingsContainer">
-                            <div class="col-sm-10 col-sm-offset-1 rolloutSettings">
+                            <div class="col-sm-12" id="introText">
+                              <h3 style="width:500px;">
+                                Please select a device
+                              </h3>
+                            </div>
+                            <div style="display:none;" id="settings-loading" class="col-sm-10 col-sm-offset-1 rolloutSettings loading">
+                              <img src="{% static "slow-loading.gif"%}" alt="Loading.." />
+                            </div>
+                            <div style="display:none;" class="col-sm-10 col-sm-offset-1 rolloutSettings">
                                 <span class="value-notice">Value should be in centimeters from the top of the window blind (cm)</span>
                                 <label for="maxRolloutAmount">How far down would you like the window blinds to be when rolled down?</label>
                                 <input type="number" min="0" step="1" max="255" value="" class="form-control" id="distMax" name="maxRolloutAmount">
                                 <label for="maxRolloutAmount">How far down would you like the window blinds to be when rolled up?</label>
                                 <input type="number" min="0" step="1" max="255" value=""class="form-control" id="distMin" name="minRolloutAmount">
                             </div>
-                            <div class="col-sm-10 col-sm-offset-1 temperatureBoundaries">
+                            <div style="display:none;" class="col-sm-10 col-sm-offset-1 temperatureBoundaries">
                                 <span class="value-notice">Value should be in degrees Celsius (°C)</span>
                                 <label for="maxRolloutAmount">At what temperature should the window blinds roll down?</label>
                                 <input type="number" min="0" step="1" max="255" value=""class="form-control" id="temp" name="maxTemperature">
@@ -30,7 +38,7 @@
                                 <label for="maxRolloutAmount">At what lightintensity should the window blinds roll down?</label>
                                 <input type="number" min="0" step="1" max="1023" value=""class="form-control" id="light" name="maxLightIntensity">
                             </div>
-                            <div class="col-sm-2 submitBtnContainer">
+                            <div style="display:none;" class="col-sm-12 submitBtnContainer">
                                 <input type="submit" class="btn btn-primary form-control" value="Submit" />
                             </div>
                         </div>

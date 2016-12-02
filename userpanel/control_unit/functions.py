@@ -237,4 +237,5 @@ def tempSensorToC(tempcode):
 
 #reverse of tempSensorToC
 def tempCToSensor(temp):
+    temp = int(temp)
     return round(((temp * 10) + 500) / (5000.0 / 1024)) # added .0 for floating point numbers (python thing..)
